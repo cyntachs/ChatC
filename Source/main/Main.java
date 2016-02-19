@@ -3,42 +3,46 @@ package main;
 
 //imports
 import java.awt.*;
-
 import javax.swing.*;
 
 // main program
 public class Main extends JFrame {
+	/*
+	 *  Code is subject to change. This is only a demo.
+	 */
 	public static final String AppName = "ChatC";
 	
 	// frame initialize
 	public Main() {
 		super(AppName);
-		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		Container mContainer = getContentPane();
+		Container mContainer = getContentPane(); // get main container
 		mContainer.setLayout(new BorderLayout());
 		
-		Container tContainer = new Container();
+		Container tContainer = new Container(); // top container
 		tContainer.setLayout(new BorderLayout());
 		
-		mContainer.add(tContainer, BorderLayout.CENTER);
+		mContainer.add(tContainer, BorderLayout.CENTER); // add top container to center of main container
 		
-		JTextArea txtAreaLeft = new JTextArea("LEFT (Chat history area)"); 
-		JScrollPane scrollPane = new JScrollPane(txtAreaLeft); 
+		JTextArea txtAreaLeft = new JTextArea("LEFT (Chat history area)");
+		JScrollPane LeftPane = new JScrollPane(txtAreaLeft); 
 		txtAreaLeft.setEditable(false);
 		
-		JTextArea txtAreaRight = new JTextArea("RIGHT (Users in session)"); 
-		JScrollPane scrollPane2 = new JScrollPane(txtAreaRight); 
+		JTextArea txtAreaRight = new JTextArea("RIGHT (Users in session)");
+		JScrollPane RightPane = new JScrollPane(txtAreaRight); 
 		txtAreaRight.setEditable(false);
 		
-		JTextArea txtAreaInput = new JTextArea("INPUT (Text input)"); 
-		JScrollPane scrollPane3 = new JScrollPane(txtAreaInput); 
+		JTextArea txtAreaInput = new JTextArea("INPUT (Text input)");
+		JScrollPane InputPane = new JScrollPane(txtAreaInput); 
 		txtAreaInput.setEditable(false);
 		
-		tContainer.add(scrollPane, BorderLayout.CENTER);
-		tContainer.add(scrollPane2, BorderLayout.LINE_END);
-		mContainer.add(scrollPane3, BorderLayout.PAGE_END);
+		tContainer.add(LeftPane, BorderLayout.CENTER); // add to top container
+		tContainer.add(RightPane, BorderLayout.LINE_END); // add to top container
+		mContainer.add(InputPane, BorderLayout.PAGE_END); // add to bottom of main container
+		
+		// frame properties
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // make app close properly
 		setSize(500,450);
-		setVisible(true);
+		setVisible(true); // display frame
 	};
 	
 	// main function
