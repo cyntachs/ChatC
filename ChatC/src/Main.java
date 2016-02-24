@@ -1,5 +1,4 @@
 // package
-package main;
 
 //imports
 import java.awt.*;
