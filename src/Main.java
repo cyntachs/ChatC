@@ -1,6 +1,3 @@
-// package
-package main;
-
 //imports
 import java.awt.*;
 import javax.swing.*;
