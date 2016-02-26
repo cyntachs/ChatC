@@ -13,15 +13,24 @@ public class ServerNet implements Runnable {
 	//private InetAddress ServerAddress;
 	private int ServerPort;
 	
-	ServerNet(int threadid) {
+	ServerNet(int threadid, int port) {
 		ID = threadid;
+		ServerPort = port;
 		try {
 			sSocket = new ServerSocket(ServerPort);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public String receive() {
+		return "";
+	}
+	
+	public void send(String Data) {
+		
+	}
+	
 	public void run() {
 		
 	}
@@ -31,14 +40,6 @@ public class ServerNet implements Runnable {
 	}
 	
 	public void stop() {
-		
-	}
-	
-	public String receive() {
-		return "";
-	}
-	
-	public void send(String Data) {
 		
 	}
 }

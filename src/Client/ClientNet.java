@@ -1,4 +1,5 @@
 package Client;
+
 import java.io.*;
 import java.net.*;
 
@@ -23,6 +24,27 @@ public class ClientNet implements Runnable {
 		}
 	}
 
+	public String receive() {
+		try {
+			InputStream ServerInput = cSocket.getInputStream();
+			DataInputStream DServerInput = new DataInputStream(ServerInput);
+			return DServerInput.readUTF();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public void send(String Data) {
+		try {
+			OutputStream ClientOutput = cSocket.getOutputStream();
+			DataOutputStream DClientOutput = new DataOutputStream(ClientOutput);
+			DClientOutput.writeUTF(Data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void run() {
 		
 	}
