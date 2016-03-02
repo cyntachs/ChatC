@@ -11,7 +11,7 @@ public class ServerNet implements Runnable {
 	private Thread thread;
 	private ServerSocket ServerSocket;
 	private Vector<Socket> ClientSockets;
-	private boolean ReqTerminate;
+	public boolean ReqTerminate;
 	
 	//private String ServerAddress;
 	//private InetAddress ServerAddress;
@@ -24,24 +24,41 @@ public class ServerNet implements Runnable {
 	}
 	
 	ServerNet(int threadid, int port, boolean dbg) {
+		// init vars
 		debug = dbg;
 		ID = threadid;
 		ServerPort = port;
 		ReqTerminate = false;
-		print("Thread initialized");
 		
+		// init client sockets vector
+		ClientSockets = new Vector<Socket>();
+		
+		// init server socket 
 		try {
 			ServerSocket = new ServerSocket(ServerPort);
+			//ServerSocket.setSoTimeout(10000);
+			print("Server listening on port "+ServerPort);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+		
+		// debug
+		print("Server thread initialized");
 	}
 	
-	public String receive() {
-		return "";
-	}
+	/*public Vector<String> receive() {
+		for (Socket client : ClientSockets) {
+			try {
+				DataInputStream ClientInput = new DataInputStream(client.getInputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+		return new Vector<String>();
+	}*/
 	
-	public void send(String Data) {
+	/*public void send(String Data) {
 		// Send string to all clients
 		for (Socket client : ClientSockets) {
 			try {
@@ -53,18 +70,22 @@ public class ServerNet implements Runnable {
 				break;
 			}
 		}
-	}
+	}*/
 	
 	public void run() {
+		print("Socket handler thread is running");
 		while(ReqTerminate != true) {
+			print("Waiting for connections...");
 			try {
 				Socket NewClient = ServerSocket.accept();
+				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
 				ClientSockets.add(NewClient);
-				print("Added "+NewClient.getRemoteSocketAddress()+" to client list.");
+				print("Added "+NewClient.getRemoteSocketAddress()+" to clients list");
 			} catch(SocketTimeoutException s) {
 				// Socket timed out
-				break;
+				print("Socket timed out!");
 			} catch (IOException e) {
+				print("Exception!");
 				e.printStackTrace();
 				break;
 			}
@@ -72,7 +93,8 @@ public class ServerNet implements Runnable {
 	}
 	
 	public void start() {
-		
+		print("Starting server thread");
+		this.run();
 	}
 	
 	public void stop() {
