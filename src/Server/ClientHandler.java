@@ -37,7 +37,7 @@ public class ClientHandler extends Thread {
 	}
 	
 	private void ConAuth() {
-		// service verification
+		// authentication
 		try {
 			DataInputStream ClientIn = new DataInputStream(ClientSocket.getInputStream());
 			byte msgType = ClientIn.readByte();
