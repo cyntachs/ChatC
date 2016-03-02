@@ -36,7 +36,7 @@ public class ClientHandler extends Thread {
 		return ClientSocket;
 	}
 	
-	private void ConAuth() {
+	private boolean ConAuth() {
 		// authentication
 		try {
 			DataInputStream ClientIn = new DataInputStream(ClientSocket.getInputStream());
@@ -44,10 +44,13 @@ public class ClientHandler extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 	
 	private void MessageHandler() {
-		
+		while (ReqTerminate != true) {
+			//
+		}
 	}
 	
 	public void run() {
@@ -59,7 +62,7 @@ public class ClientHandler extends Thread {
 				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
 				ClientSocket = NewClient;
 				isConnected = true; // debug
-				ConAuth();
+				if (ConAuth()) break; else return;
 			} catch(SocketTimeoutException s) {
 				// Socket timed out
 				print("Socket timed out!");
@@ -68,6 +71,15 @@ public class ClientHandler extends Thread {
 				e.printStackTrace();
 				break;
 			}
+		}
+		MessageHandler();
+	}
+	
+	protected void finalize() {
+		try {
+			ClientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
