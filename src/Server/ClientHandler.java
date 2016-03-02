@@ -36,7 +36,7 @@ public class ClientHandler extends Thread {
 		return ClientSocket;
 	}
 	
-	public void ConAuth() {
+	private void ConAuth() {
 		// service verification
 		try {
 			DataInputStream ClientIn = new DataInputStream(ClientSocket.getInputStream());
@@ -44,6 +44,10 @@ public class ClientHandler extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void MessageHandler() {
+		
 	}
 	
 	public void run() {

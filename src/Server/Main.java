@@ -43,7 +43,7 @@ public class Main {
 		// init server socket
 		try {
 			ServerSocket = new ServerSocket(ServerPort);
-			ServerSocket.setSoTimeout(10000);
+			//ServerSocket.setSoTimeout(10000);
 			print("Server listening in port "+ServerPort);
 		} catch (IOException e) {
 			e.printStackTrace();
