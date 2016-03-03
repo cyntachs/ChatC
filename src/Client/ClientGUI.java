@@ -207,11 +207,7 @@ public class ClientGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ClientGUI client_Form = new ClientGUI();
-                client_Form.setVisible(false);
-                LoginGUI login_Form = new LoginGUI();
-                login_Form.setVisible(true);
-                
+                new ClientGUI().setVisible(true);                
             }
         });
     }
