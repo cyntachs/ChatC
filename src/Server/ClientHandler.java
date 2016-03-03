@@ -4,10 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javafx.scene.Parent;
+
 public class ClientHandler extends Thread {
 	private boolean debug;
 	private boolean ReqTerminate;
-	private boolean isConnected;
+	protected static boolean isConnected;
 	private int ThreadID;
 	
 	private static ServerSocket ServerSocket;
@@ -18,7 +20,7 @@ public class ClientHandler extends Thread {
 	
 	private void print(String dbg) {
 		if (debug) {
-			System.out.println("[ClientHandler"+ThreadID+"]: "+dbg);
+			System.out.println("[CliHandl"+ThreadID+"]: "+dbg);
 		}
 	}
 	
@@ -31,20 +33,20 @@ public class ClientHandler extends Thread {
 		ServerSocket = serv;
 	}
 	
-	public boolean getConnectionStatus() {
+	protected boolean getConnectionStatus() {
 		return isConnected;
 	}
 	
-	public static Socket getClientSocket() {
+	protected static Socket getClientSocket() {
 		return ClientSocket;
 	}
 	
-	public static ServerSocket getServerSocket() {
+	protected static ServerSocket getServerSocket() {
 		return ServerSocket;
 	}
 	
-	public static void send(String data) {
-		
+	protected static void send(String data) {
+		Packet.writePacket(1, 14, data.length(), false, 1, data);
 	}
 	
 	private boolean ConAuth() {
@@ -53,17 +55,27 @@ public class ClientHandler extends Thread {
 		if (data[0]+data[1] == "02") {
 			
 		}
+		isConnected = true;
 		return true;
 	}
 	
 	private void MessageHandler() {
 		while (ReqTerminate != true) {
 			String[] data = Packet.readPacket();
-			if (data[0] == "0") {
+			switch(data[0]) {
+			case "0":
 				// message is a command
 				Command.get(Integer.parseInt(data[1])).run();
-			} else if(data[0] == "1") { // regular data
-				
+				break;
+			case "1":
+				// check for valid packet tags
+				if (data[1] != "14") return;
+				// broadcast to everyone else
+				Main.Broadcast(data[6],this);
+				break;
+			default:
+				// error
+				break;
 			}
 		}
 	}
@@ -76,7 +88,6 @@ public class ClientHandler extends Thread {
 				Socket NewClient = ServerSocket.accept();
 				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
 				ClientSocket = NewClient;
-				isConnected = true; // debug
 				if (ConAuth()) break; else return;
 			} catch(SocketTimeoutException s) {
 				// Socket timed out

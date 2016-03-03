@@ -1,6 +1,8 @@
 package Client;
-//imports
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 // main program
 public class Main {
@@ -9,8 +11,16 @@ public class Main {
 	 */
 
 	// main function
+	public static void print(String m) {
+		System.out.println("[Client]: "+m);
+	}
+	
 	public static void main(String[] args) {
-		// create frame
-		new Frame();
+		print("Starting connection");
+		try {
+			new ClientNet(InetAddress.getLocalHost());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -14,18 +14,19 @@ public class ClientNet {
 	
 	private void print(String dbg) {
 		if (debug) {
-			System.out.println("[Client]: "+dbg);
+			System.out.println("[ClientNet]: "+dbg);
 		}
 	}
 	
-	public ClientNet(int port,InetAddress addr) {
+	public ClientNet(InetAddress addr) {
 		debug = true;
 		
-		ServerPort = port;
+		ServerPort = 3680;
 		ServerAddress = addr;
 		
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
+			print("client connecting to server");
 		} catch (UnknownHostException e) {
 			print("Unknown host");
 		} catch (IOException e) {

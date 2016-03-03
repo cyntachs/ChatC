@@ -1,6 +1,11 @@
 package Server;
 
 public enum Command {
+	DEFAULT(-1) {
+		public void run() {
+			// Unknown command
+		}
+	},
 	PING(0) {
 		public void run() {
 			// Ping packet. send travel time back.
@@ -8,7 +13,17 @@ public enum Command {
 	},
 	REQ_STAT(1) {
 		public void run() {
-			// send server stat
+			// handle client request for server stat
+		}
+	},
+	REQ_CON(2) {
+		public void run() {
+			// handle client request for connection
+			if (!ClientHandler.isConnected) {
+				// authenticate client
+				// isConnected = true
+				// return
+			}
 		}
 	};
 	
@@ -23,6 +38,6 @@ public enum Command {
 				return c;
 			}
 		}
-		return null;
+		return DEFAULT;
 	}
 }

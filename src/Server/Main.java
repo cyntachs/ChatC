@@ -14,6 +14,7 @@ public class Main {
 	private static int nextClientID;
 	
 	// sockets
+	private static Vector<Vector<ClientHandler>> ChatRooms;
 	private static Vector<ClientHandler> ClientHandlerThreads;
 	private static ServerSocket ServerSocket;
 	
@@ -24,7 +25,7 @@ public class Main {
 		}
 	}
 	
-	public synchronized void Broadcast(String data, ClientHandler except) {
+	public synchronized static void Broadcast(String data, ClientHandler except) {
 		for (ClientHandler client : ClientHandlerThreads) {
 			if (client != except) {
 				client.send(data);
@@ -35,15 +36,6 @@ public class Main {
 	public static void main(String[] args) {
 		Term = false;
 		nextClientID = 1;
-		/*
-		ServerNet SocketThread = new ServerNet(1,1,true);
-		print("Socket thread created");
-		SocketThread.start();
-		print("Socket thread started");
-		print("Entering loop.");
-		while(!Term) {
-			if (SocketThread.ReqTerminate) break;
-		}*/
 		
 		// init client handler thread vector
 		ClientHandlerThreads = new Vector<ClientHandler>();
