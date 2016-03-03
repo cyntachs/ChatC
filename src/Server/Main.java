@@ -24,6 +24,14 @@ public class Main {
 		}
 	}
 	
+	public synchronized void Broadcast(String data, ClientHandler except) {
+		for (ClientHandler client : ClientHandlerThreads) {
+			if (client != except) {
+				client.send(data);
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		Term = false;
 		nextClientID = 1;

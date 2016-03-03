@@ -3,7 +3,7 @@ package Client;
 import java.io.*;
 import java.net.*;
 
-public class ClientNet  {
+public class ClientNet {
 	private boolean debug;
 	
 	private int ServerPort;
