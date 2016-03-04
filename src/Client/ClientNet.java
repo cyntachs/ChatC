@@ -3,57 +3,45 @@ package Client;
 import java.io.*;
 import java.net.*;
 
-// Sockets thread class
-
-public class ClientNet implements Runnable {
-	private int ID;
+public class ClientNet {
+	private boolean debug;
 	
-	private Thread thread;
-	private Socket cSocket;
-	
-	//private String ServerAddress;
-	private InetAddress ServerAddress;
 	private int ServerPort;
+	private InetAddress ServerAddress;
+	private Socket ClientSocket;
 	
-	ClientNet(int threadid) {
-		ID = threadid;
-		try {
-			cSocket = new Socket(ServerAddress,ServerPort);
-		} catch(IOException e) {
-			e.printStackTrace();
+	private ServerHandler ServerHandler;
+	
+	private void print(String dbg) {
+		if (debug) {
+			System.out.println("[ClientNet]: "+dbg);
 		}
 	}
-
-	public String receive() {
+	
+	public ClientNet(InetAddress addr) {
+		debug = true;
+		
+		ServerPort = 3680;
+		ServerAddress = addr;
+		
 		try {
-			InputStream ServerInput = cSocket.getInputStream();
-			DataInputStream DServerInput = new DataInputStream(ServerInput);
-			return DServerInput.readUTF();
+			ClientSocket = new Socket(ServerAddress,ServerPort);
+			print("client connecting to server");
+		} catch (UnknownHostException e) {
+			print("Unknown host");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "";
+				
+		ServerHandler = new ServerHandler(ClientSocket,debug);
+		ServerHandler.start();
 	}
 	
-	public void send(String Data) {
-		try {
-			OutputStream ClientOutput = cSocket.getOutputStream();
-			DataOutputStream DClientOutput = new DataOutputStream(ClientOutput);
-			DClientOutput.writeUTF(Data);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void run() {
+	public void send(String data) {
 		
 	}
 	
-	public void start() {
-		
-	}
-	
-	public void stop() {
+	public void receive() {
 		
 	}
 }
