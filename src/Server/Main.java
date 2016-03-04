@@ -28,7 +28,7 @@ public class Main {
 	public synchronized static void Broadcast(String data, ClientHandler except) {
 		for (ClientHandler client : ClientHandlerThreads) {
 			if (client != except) {
-				print("Broadcastng to "+client.getID());
+				print("Broadcasting to "+client.getID());
 				client.send(data);
 			}
 		}
@@ -53,7 +53,7 @@ public class Main {
 		print("Server initialized");
 		
 		// Server routine
-		ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,true);
+		ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,debug);
 		newClient.setDaemon(true);
 		newClient.start();
 		print("Server routine start");
@@ -66,7 +66,7 @@ public class Main {
 				
 				// create new client handler
 				nextClientID++;
-				newClient = new ClientHandler(nextClientID,ServerSocket,true);
+				newClient = new ClientHandler(nextClientID,ServerSocket,debug);
 				newClient.setDaemon(true);
 				newClient.start();
 			}

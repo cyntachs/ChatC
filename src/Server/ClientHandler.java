@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import javafx.scene.Parent;
-
 public class ClientHandler extends Thread {
 	private boolean debug;
 	private boolean ReqTerminate;
