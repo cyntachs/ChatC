@@ -57,6 +57,7 @@ public class Main {
 		newClient.start();
 		print("Server routine start");
 		while (!Term) {
+			// Add new client
 			if (newClient.getConnectionStatus()) {
 				// add new connected client
 				ClientHandlerThreads.add(newClient);
@@ -67,6 +68,14 @@ public class Main {
 				newClient = new ClientHandler(nextClientID,ServerSocket,true);
 				newClient.setDaemon(true);
 				newClient.start();
+			}
+			
+			// remove dead threads (prevent memory leak)
+			for (ClientHandler c : ClientHandlerThreads) {
+				if (!c.isAlive()) {
+					print("Removing thread "+c.getID()+"");
+					ClientHandlerThreads.remove(c);
+				}
 			}
 		}
 	}

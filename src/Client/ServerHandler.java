@@ -35,8 +35,15 @@ public class ServerHandler extends Thread {
 	
 	public void run() {
 		// Authenticate
-		while(!ReqTerminate) {
+		//while(!ReqTerminate) {
 			//ConAuth();
+		//}
+		Packet.writePacket(1, 14, 5, false, 1, "hello");
+		print("data sent");
+		try {
+		    Thread.sleep(10000); //1000 milliseconds is one second.
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
 		}
 	}
 	

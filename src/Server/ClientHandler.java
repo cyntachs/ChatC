@@ -33,17 +33,10 @@ public class ClientHandler extends Thread {
 		ServerSocket = serv;
 	}
 	
-	protected boolean getConnectionStatus() {
-		return isConnected;
-	}
-	
-	protected static Socket getClientSocket() {
-		return ClientSocket;
-	}
-	
-	protected static ServerSocket getServerSocket() {
-		return ServerSocket;
-	}
+	protected int getID() {return ThreadID;}
+	protected boolean getConnectionStatus() {return isConnected;}
+	protected static Socket getClientSocket() {return ClientSocket;}
+	protected static ServerSocket getServerSocket() {return ServerSocket;}
 	
 	protected static void send(String data) {
 		Packet.writePacket(1, 14, data.length(), false, 1, data);
@@ -51,32 +44,51 @@ public class ClientHandler extends Thread {
 	
 	private boolean ConAuth() {
 		// authentication
-		String[] data = Packet.readPacket();
+		/*String[] data = Packet.readPacket();
 		if (data[0]+data[1] == "02") {
 			
-		}
+		}*/
+		print("Client authorized");
 		isConnected = true;
 		return true;
 	}
 	
 	private void MessageHandler() {
-		while (ReqTerminate != true) {
-			String[] data = Packet.readPacket();
-			switch(data[0]) {
-			case "0":
-				// message is a command
-				Command.get(Integer.parseInt(data[1])).run();
-				break;
-			case "1":
-				// check for valid packet tags
-				if (data[1] != "14") return;
-				// broadcast to everyone else
-				Main.Broadcast(data[6],this);
-				break;
-			default:
-				// error
-				break;
-			}
+		if (!Packet.readAvailable()) return;
+		print("Received message");
+		
+		String[] data = Packet.readPacket();
+		
+		if (data == null || data[0] == null) {
+			print("MessageHandler received invalid data");
+			if (data == null) print("Data is null");
+			if (data[0] == null) print("Data is empty");
+			Packet.flushSocket();
+			return;
+		}
+		
+		print("\nPacket Dump: ["+data[0]+"-"+data[1]+"-"+data[2]+"-"+data[3]+"-"+data[4]+"-"+data[5]+"]\n"+
+				"Message Type:    "+data[0]+"\n"+
+				"Command:         "+data[1]+"\n"+
+				"Data Size:       "+data[2]+"\n"+
+				"Is fragmented:   "+data[3]+"\n"+
+				"Fragment part #: "+data[4]+"\n"+
+				"[Data]\n"+data[5]);
+		
+		switch(data[0]) {
+		case "0":
+			// message is a command
+			Command.get(Integer.parseInt(data[1])).run(null);
+			break;
+		case "1":
+			// check for valid packet tags
+			if (data[1] != "14") return;
+			// broadcast to everyone else
+			Main.Broadcast(data[6],this);
+			break;
+		default:
+			// error
+			break;
 		}
 	}
 	
@@ -104,6 +116,7 @@ public class ClientHandler extends Thread {
 	}
 	
 	protected void finalize() {
+		print("Thread closing");
 		try {
 			ClientSocket.close();
 		} catch (IOException e) {
