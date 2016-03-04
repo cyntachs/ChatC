@@ -61,7 +61,7 @@ public class ClientHandler extends Thread {
 		
 		if (data == null || data[0] == null) {
 			print("MessageHandler received invalid data");
-			if (data == null) print("Data is null");
+			if (data == null) print("Data is null"); else
 			if (data[0] == null) print("Data is empty");
 			Packet.flushSocket();
 			return;

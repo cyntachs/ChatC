@@ -28,6 +28,7 @@ public class Main {
 	public synchronized static void Broadcast(String data, ClientHandler except) {
 		for (ClientHandler client : ClientHandlerThreads) {
 			if (client != except) {
+				print("Broadcastng to "+client.getID());
 				client.send(data);
 			}
 		}
