@@ -5,6 +5,9 @@
  */
 package Client;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author Chochu
@@ -27,161 +30,216 @@ public class ClientGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        UserOnline_textarea = new javax.swing.JTextArea();
+        UserOnline_jTextArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        Chat_jEditorPane = new javax.swing.JEditorPane();
         jPanel2 = new javax.swing.JPanel();
-        Host_Label = new javax.swing.JLabel();
-        Host_Textfield = new javax.swing.JTextField();
-        Port_Label = new javax.swing.JLabel();
-        Port_Textfield = new javax.swing.JTextField();
-        Join_Button = new javax.swing.JButton();
-        Leave_Button = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        Friendlist_Button = new javax.swing.JButton();
-        Message_Textfield = new javax.swing.JTextField();
-        Send_Button = new javax.swing.JButton();
-        SendFile_Button = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        ChatHistory_EditorPane = new javax.swing.JEditorPane();
+        message_jEditorPane = new javax.swing.JEditorPane();
+        Emoji_jButton = new javax.swing.JButton();
+        Font_jComboBox = new javax.swing.JComboBox<>();
+        TextColor_jButton = new javax.swing.JButton();
+        Underline_jToggleButton = new javax.swing.JToggleButton();
+        Italic_jToggleButton = new javax.swing.JToggleButton();
+        Bold_jToggleButton = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        UserOnline_textarea.setEditable(false);
-        UserOnline_textarea.setColumns(20);
-        UserOnline_textarea.setRows(5);
-        jScrollPane2.setViewportView(UserOnline_textarea);
+        UserOnline_jTextArea.setEditable(false);
+        UserOnline_jTextArea.setColumns(20);
+        UserOnline_jTextArea.setRows(5);
+        UserOnline_jTextArea.setAutoscrolls(false);
+        UserOnline_jTextArea.setFocusable(false);
+        jScrollPane2.setViewportView(UserOnline_jTextArea);
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("User in Chat");
+        jLabel1.setText("User Online");
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        Chat_jEditorPane.setEditable(false);
+        Chat_jEditorPane.setContentType("text/html"); // NOI18N
+        Chat_jEditorPane.setPreferredSize(new java.awt.Dimension(0, 0));
+        Chat_jEditorPane.setRequestFocusEnabled(false);
+        jScrollPane4.setViewportView(Chat_jEditorPane);
 
-        Host_Label.setText("Host");
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        Port_Label.setText("Port");
+        message_jEditorPane.setContentType("text/html"); // NOI18N
+        message_jEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                message_jEditorPaneKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(message_jEditorPane);
 
-        Join_Button.setText("Join Server");
-        Join_Button.setToolTipText("");
-        Join_Button.setActionCommand("");
+        Emoji_jButton.setText("Emoji");
 
-        Leave_Button.setText("Leave");
-        Leave_Button.setActionCommand("Leave Server");
+        Font_jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Font 1", "Font 2", "Font 3", "Font 4", "Font 5", " ", " " }));
 
-        jButton1.setText("Save Log");
+        TextColor_jButton.setText("Color");
 
-        Friendlist_Button.setText("Friend");
+        Underline_jToggleButton.setText("U");
+        Underline_jToggleButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Underline_jToggleButtonItemStateChanged(evt);
+            }
+        });
+
+        Italic_jToggleButton.setText("I");
+        Italic_jToggleButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Italic_jToggleButtonItemStateChanged(evt);
+            }
+        });
+
+        Bold_jToggleButton.setText("B");
+        Bold_jToggleButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                Bold_jToggleButtonItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(Host_Label)
-                                .addGap(18, 18, 18))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(Port_Label)
-                                .addGap(20, 20, 20)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(Port_Textfield, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                            .addComponent(Host_Textfield)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(Join_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Leave_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Friendlist_Button)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(Bold_jToggleButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Italic_jToggleButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Underline_jToggleButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TextColor_jButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Font_jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Emoji_jButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Host_Label)
-                    .addComponent(Host_Textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Bold_jToggleButton)
+                    .addComponent(TextColor_jButton)
+                    .addComponent(Italic_jToggleButton)
+                    .addComponent(Underline_jToggleButton)
+                    .addComponent(Font_jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Emoji_jButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Port_Label)
-                    .addComponent(Port_Textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(95, 95, 95))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                        .addContainerGap())))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Join_Button)
-                    .addComponent(Leave_Button)
-                    .addComponent(jButton1)
-                    .addComponent(Friendlist_Button))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Send_Button.setText("Send");
-
-        SendFile_Button.setText("Send File");
-        SendFile_Button.setToolTipText("");
-
-        jScrollPane3.setViewportView(ChatHistory_EditorPane);
+        jTabbedPane1.addTab("tab1", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(Message_Textfield, javax.swing.GroupLayout.PREFERRED_SIZE, 614, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Send_Button))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(SendFile_Button)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(98, 98, 98)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2)))))
-                .addContainerGap())
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SendFile_Button)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Message_Textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Send_Button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 509, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>                        
 
+    private void message_jEditorPaneKeyPressed(java.awt.event.KeyEvent evt) {                                               
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+//            if(isConnected()){
+//                Client.send(message_jEditorPane.text);
+//            }
+            Chat_jEditorPane.setText(message_jEditorPane.getText());
+            evt.consume();
+            message_jEditorPane.setText("");
+            resetToggleButton();
+        }
+    }                                              
+    
+    private void Bold_jToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {                                                    
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            message_jEditorPane.setText("<html><b>"+message_jEditorPane.getText()+"</b></html>");
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            message_jEditorPane.setText(removeBold(message_jEditorPane.getText()));
+        }
+    }                                                   
+
+    private void Italic_jToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {                                                      
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            message_jEditorPane.setText("<html><i>"+message_jEditorPane.getText()+"</i></html>");
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            message_jEditorPane.setText(removeItalic(message_jEditorPane.getText()));
+        }
+    }                                                     
+
+    private void Underline_jToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {                                                         
+        if(evt.getStateChange()==ItemEvent.SELECTED){
+            message_jEditorPane.setText("<html><u>"+message_jEditorPane.getText()+"</u></html>");
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            message_jEditorPane.setText(removeUnderline(message_jEditorPane.getText()));
+        }
+    }                                                        
+    private void resetToggleButton(){
+        Bold_jToggleButton.setSelected(false);
+        Underline_jToggleButton.setSelected(false);
+        Italic_jToggleButton.setSelected(false);
+    }
+    private String removeBold(String str){
+        return (str.replace("<b>", "").replace("</b>", ""));
+    }
+    private String removeUnderline(String str){
+        return (str.replace("<u>", "").replace("</u>", ""));
+    }
+    private String removeItalic(String str){
+        return (str.replace("<i>", "").replace("</i>", ""));
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    	/* Set the Nimbus look and feel */
+        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -207,28 +265,27 @@ public class ClientGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ClientGUI().setVisible(true);                
+                new ClientGUI().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JEditorPane ChatHistory_EditorPane;
-    private javax.swing.JButton Friendlist_Button;
-    private javax.swing.JLabel Host_Label;
-    private javax.swing.JTextField Host_Textfield;
-    private javax.swing.JButton Join_Button;
-    private javax.swing.JButton Leave_Button;
-    private javax.swing.JTextField Message_Textfield;
-    private javax.swing.JLabel Port_Label;
-    private javax.swing.JTextField Port_Textfield;
-    private javax.swing.JButton SendFile_Button;
-    private javax.swing.JButton Send_Button;
-    private javax.swing.JTextArea UserOnline_textarea;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JToggleButton Bold_jToggleButton;
+    private javax.swing.JEditorPane Chat_jEditorPane;
+    private javax.swing.JButton Emoji_jButton;
+    private javax.swing.JComboBox<String> Font_jComboBox;
+    private javax.swing.JToggleButton Italic_jToggleButton;
+    private javax.swing.JButton TextColor_jButton;
+    private javax.swing.JToggleButton Underline_jToggleButton;
+    private javax.swing.JTextArea UserOnline_jTextArea;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JEditorPane message_jEditorPane;
     // End of variables declaration                   
 }
