@@ -1,14 +1,27 @@
 package Server;
 
+import java.net.*;
 import java.io.*;
 
 public class Packet {
+	private static DataInputStream ClientIn;
+	private static DataOutputStream ClientOut;
+	
+	public Packet(Socket ClientSocket) {
+		try {
+			ClientIn = new DataInputStream(ClientSocket.getInputStream());
+			ClientOut = new DataOutputStream(ClientSocket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public static boolean readAvailable() {
-		DataInputStream ClientIn;
+		//DataInputStream ClientIn;
 		boolean retval = false;
 		try {
-			ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
+			//ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
 			 retval = (ClientIn.available() > 0)? true:false;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -18,16 +31,16 @@ public class Packet {
 	
 	public static void flushSocket() {
 		try {
-			DataInputStream ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
+			//DataInputStream ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
 			ClientIn.skip(9999);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
+	public synchronized static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
 		try {
-			DataOutputStream ClientOut = new DataOutputStream(ClientHandler.getClientSocket().getOutputStream());
+			//DataOutputStream ClientOut = new DataOutputStream(ClientHandler.getClientSocket().getOutputStream());
 			
 			ClientOut.writeByte(type); // message type
 			ClientOut.writeByte(cmd); // command
@@ -40,11 +53,11 @@ public class Packet {
 		}
 	}
 	
-	public static String[] readPacket() {
+	public synchronized static String[] readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
-			DataInputStream ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
+			//DataInputStream ClientIn = new DataInputStream(ClientHandler.getClientSocket().getInputStream());
 			
 			byte type = ClientIn.readByte();
 			byte cmd = ClientIn.readByte();

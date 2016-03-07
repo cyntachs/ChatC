@@ -10,7 +10,9 @@ public class ClientHandler extends Thread {
 	protected static boolean isConnected;
 	private int ThreadID;
 	
-	private static ServerSocket ServerSocket;
+	private static Packet Packet;
+	
+	//private static ServerSocket ServerSocket;
 	private static Socket ClientSocket;
 	
 	private String RoomID;
@@ -22,19 +24,22 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-	public ClientHandler (int id,ServerSocket serv, boolean dbg) {
+	public ClientHandler (int id,Socket Client, boolean dbg) {
 		debug = dbg;
 		ReqTerminate = false;
 		isConnected = false;
 		ThreadID = id;
 		
-		ServerSocket = serv;
+		Packet = new Packet(Client);
+		
+		ClientSocket = Client;
+		//ServerSocket = serv;
 	}
 	
 	protected int getID() {return ThreadID;}
 	protected boolean getConnectionStatus() {return isConnected;}
 	protected static Socket getClientSocket() {return ClientSocket;}
-	protected static ServerSocket getServerSocket() {return ServerSocket;}
+	//protected static ServerSocket getServerSocket() {return ServerSocket;}
 	
 	protected static void send(String data) {
 		Packet.writePacket(1, 14, data.length(), false, 1, data);
@@ -61,7 +66,7 @@ public class ClientHandler extends Thread {
 			print("MessageHandler received invalid data");
 			if (data == null) print("Data is null"); else
 			if (data[0] == null) print("Data is empty");
-			Packet.flushSocket();
+			//Packet.flushSocket();
 			return;
 		}
 		
@@ -92,7 +97,7 @@ public class ClientHandler extends Thread {
 	
 	public void run() {
 		print("Client handler thread running. ID "+ThreadID);
-		while(ReqTerminate != true) {
+		/*while(ReqTerminate != true) {
 			print("Waiting for a client...");
 			try {
 				Socket NewClient = ServerSocket.accept();
@@ -107,7 +112,7 @@ public class ClientHandler extends Thread {
 				e.printStackTrace();
 				break;
 			}
-		}
+		}*/
 		while (!ReqTerminate) {
 			MessageHandler();
 		}

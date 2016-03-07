@@ -14,8 +14,8 @@ public class Main {
 	private static int nextClientID;
 	
 	// sockets
-	private static Vector<Vector<ClientHandler>> ChatRooms;
-	private static Vector<ClientHandler> ClientHandlerThreads;
+	protected static Vector<Vector<ClientHandler>> ChatRooms;
+	protected static Vector<ClientHandler> ClientHandlerThreads;
 	private static ServerSocket ServerSocket;
 	
 	// debug print function
@@ -53,13 +53,20 @@ public class Main {
 		print("Server initialized");
 		
 		// Server routine
-		ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,debug);
-		newClient.setDaemon(true);
-		newClient.start();
+		//ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,debug);
+		//newClient.setDaemon(true);
+		//newClient.start();
+		
+		// client listener version
+		//ClientListener Listener = new ClientListener(ServerSocket,debug);
+		//Listener.setDaemon(true);
+		//Listener.start();
+		//print("Client listener started");
+		
 		print("Server routine start");
 		while (!Term) {
 			// Add new client
-			if (newClient.getConnectionStatus()) {
+			/*if (newClient.getConnectionStatus()) {
 				// add new connected client
 				ClientHandlerThreads.add(newClient);
 				print("Added new client");
@@ -69,15 +76,39 @@ public class Main {
 				newClient = new ClientHandler(nextClientID,ServerSocket,debug);
 				newClient.setDaemon(true);
 				newClient.start();
+			}*/
+			try {
+				Socket NewClient = ServerSocket.accept();
+				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
+				
+				ClientHandler NewClientHandler = new ClientHandler(nextClientID,NewClient,debug);
+				//NewClientHandler.setDaemon(true);
+				NewClientHandler.start();
+				
+				ClientHandlerThreads.add(NewClientHandler);
+				print("Added new client");
+				
+				nextClientID++;
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			
 			// remove dead threads (prevent memory leak)
 			for (ClientHandler c : ClientHandlerThreads) {
 				if (!c.isAlive()) {
 					print("Removing thread "+c.getID()+"");
-					ClientHandlerThreads.remove(c);
+					//ClientHandlerThreads.remove(c);
 				}
 			}
 		}
 	}
 }
+
+/*
+ * Bugs:
+ * - When new client joins, previous client handler would read packet sent by new client instead
+ *   - Might be because of synchronization errors (try to implement InputStream/OutputStream instead)
+ *   - use BufferedReader & PrintWriter
+ * - "MessageHandler received invalid data/Data is null" bug
+ * 
+ */
