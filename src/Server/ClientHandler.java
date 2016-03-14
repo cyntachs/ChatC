@@ -1,5 +1,6 @@
 package Server;
 
+import Global.Packet;
 import java.io.*;
 import java.net.*;
 import java.util.*;

@@ -1,5 +1,6 @@
 package Client;
 
+import Global.Packet;
 import java.io.*;
 import java.net.*;
 
@@ -9,6 +10,8 @@ public class ServerHandler extends Thread {
 	protected static boolean isConnected;
 	
 	private static Socket ClientSocket;
+	
+	private static Packet Packet;
 	
 	private String Data;
 	
@@ -22,6 +25,8 @@ public class ServerHandler extends Thread {
 		debug = dbg;
 		ReqTerminate = false;
 		ClientSocket = cli;
+		
+		Packet = new Packet(cli);
 	}
 	
 	protected static Socket getClientSocket() {
