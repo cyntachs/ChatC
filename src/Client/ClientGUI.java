@@ -5,8 +5,17 @@
  */
 package Client;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
 
 /**
  *
@@ -38,14 +47,13 @@ public class ClientGUI extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         Chat_jEditorPane = new javax.swing.JEditorPane();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        message_jEditorPane = new javax.swing.JEditorPane();
         Emoji_jButton = new javax.swing.JButton();
-        Font_jComboBox = new javax.swing.JComboBox<>();
         TextColor_jButton = new javax.swing.JButton();
         Underline_jToggleButton = new javax.swing.JToggleButton();
         Italic_jToggleButton = new javax.swing.JToggleButton();
         Bold_jToggleButton = new javax.swing.JToggleButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        message_jEditorPane = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,22 +72,19 @@ public class ClientGUI extends javax.swing.JFrame {
         Chat_jEditorPane.setRequestFocusEnabled(false);
         jScrollPane4.setViewportView(Chat_jEditorPane);
 
-        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        message_jEditorPane.setContentType("text/html"); // NOI18N
-        message_jEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                message_jEditorPaneKeyPressed(evt);
+        Emoji_jButton.setText("Emoji");
+        Emoji_jButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Emoji_jButtonActionPerformed(evt);
             }
         });
-        jScrollPane3.setViewportView(message_jEditorPane);
-
-        Emoji_jButton.setText("Emoji");
-
-        Font_jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Font 1", "Font 2", "Font 3", "Font 4", "Font 5", " ", " " }));
 
         TextColor_jButton.setText("Color");
+        TextColor_jButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextColor_jButtonActionPerformed(evt);
+            }
+        });
 
         Underline_jToggleButton.setText("U");
         Underline_jToggleButton.addItemListener(new java.awt.event.ItemListener() {
@@ -102,11 +107,22 @@ public class ClientGUI extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        message_jEditorPane.setContentType("text/html"); // NOI18N
+        message_jEditorPane.setMinimumSize(new java.awt.Dimension(10, 25));
+        message_jEditorPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                message_jEditorPaneKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(message_jEditorPane);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(Bold_jToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -116,10 +132,9 @@ public class ClientGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextColor_jButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Font_jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Emoji_jButton)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane3)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,11 +145,10 @@ public class ClientGUI extends javax.swing.JFrame {
                     .addComponent(TextColor_jButton)
                     .addComponent(Italic_jToggleButton)
                     .addComponent(Underline_jToggleButton)
-                    .addComponent(Font_jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Emoji_jButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -164,8 +178,7 @@ public class ClientGUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -179,8 +192,8 @@ public class ClientGUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 509, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -188,16 +201,17 @@ public class ClientGUI extends javax.swing.JFrame {
 
     private void message_jEditorPaneKeyPressed(java.awt.event.KeyEvent evt) {                                               
         if (evt.getKeyCode()==KeyEvent.VK_ENTER){
-//            if(isConnected()){
-//                Client.send(message_jEditorPane.text);
-//            }
-            Chat_jEditorPane.setText(message_jEditorPane.getText());
+            //            if(isConnected()){
+                //                Client.send(message_jEditorPane.text);
+                //            }
+            //System.out.println(message_jEditorPane.getText());
+            addStringtoChat(message_jEditorPane.getText());
             evt.consume();
             message_jEditorPane.setText("");
             resetToggleButton();
         }
     }                                              
-    
+
     private void Bold_jToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {                                                    
         if(evt.getStateChange()==ItemEvent.SELECTED){
             message_jEditorPane.setText("<html><b>"+message_jEditorPane.getText()+"</b></html>");
@@ -221,6 +235,61 @@ public class ClientGUI extends javax.swing.JFrame {
             message_jEditorPane.setText(removeUnderline(message_jEditorPane.getText()));
         }
     }                                                        
+
+    private void TextColor_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        Color getColor = JColorChooser.showDialog(null, "Color Selector",Color.BLACK);
+        try{
+            String x = "<p style=\"margin-top: 0\"><font color=rgb(";
+            Pattern pat4 = Pattern.compile("\\d+");
+            Matcher m = pat4.matcher(getColor.toString());
+            //System.out.print("Printing from Color: " + removeHeader(message_jEditorPane.getText()));
+            while(m.find()){
+                x += m.group()+ ",";
+            }
+            x = x.substring(0, x.length()-1);
+            x += "\">" + removeHeader(message_jEditorPane.getText()) + "</font></p>";
+
+            message_jEditorPane.setText(x);
+        }
+        catch(NullPointerException e){
+            
+        }
+    }                                                 
+
+    private void Emoji_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
+
+        message_jEditorPane.setText("<img src='https://cdn.psychologytoday.com/sites/default/files/blogs/38/2008/12/2598-75772.jpg'/>");
+    }                                             
+        
+    private StringBuffer _globalStr = new StringBuffer("");
+    private void addStringtoChat(String str){
+        str = removeHeader(str) + "<br>";
+        _globalStr.append(str);
+        Chat_jEditorPane.setText(_globalStr.toString());
+    }
+    
+    
+    private static String _str1 = "<html>(.|\\n|\\r)*0\">"; 
+    private static String _str2 = "<\\/p>(.|\\n|\\r)*<\\/html>"; 
+    private static String _str3 = "(\\w|<)(\\w|.|\\s)*"; 
+    private static Pattern pat1 = Pattern.compile(_str1);
+    private static Pattern pat2 = Pattern.compile(_str2);
+    private static Pattern pat3 = Pattern.compile(_str3);
+    
+    private String removeHeader(String str){
+        Matcher m = pat1.matcher(str);
+        str = m.replaceAll("");
+        m = pat2.matcher(str);        
+        str = m.replaceAll("");
+        m = pat3.matcher(str);
+        if (m.find()){
+            str = m.group(0);
+            if (str != null && str.length() > 0) {
+                str = str.substring(0, str.length());
+            }
+        }
+        return str;
+    }
     private void resetToggleButton(){
         Bold_jToggleButton.setSelected(false);
         Underline_jToggleButton.setSelected(false);
@@ -274,7 +343,6 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JToggleButton Bold_jToggleButton;
     private javax.swing.JEditorPane Chat_jEditorPane;
     private javax.swing.JButton Emoji_jButton;
-    private javax.swing.JComboBox<String> Font_jComboBox;
     private javax.swing.JToggleButton Italic_jToggleButton;
     private javax.swing.JButton TextColor_jButton;
     private javax.swing.JToggleButton Underline_jToggleButton;
