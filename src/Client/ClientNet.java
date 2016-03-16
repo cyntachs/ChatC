@@ -33,7 +33,7 @@ public class ClientNet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-				
+		print("Client connected");
 		ServerHandler = new ServerHandler(ClientSocket,debug);
 		ServerHandler.start();
 	}

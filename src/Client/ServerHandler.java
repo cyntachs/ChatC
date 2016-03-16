@@ -48,7 +48,7 @@ public class ServerHandler extends Thread {
 		int count = 1;
 		Scanner keyin = new Scanner(System.in);
 		while (!ReqTerminate) {
-			keyin.next();
+			keyin.nextLine();
 			Packet.writePacket(1, 14, 5, false, 1, "Packet "+count);
 			print("Test packet "+count+" sent");
 			count++;

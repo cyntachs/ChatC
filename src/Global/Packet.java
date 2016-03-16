@@ -9,38 +9,44 @@ public class Packet {
 	private static BufferedWriter Out;
 	
 	public Packet(Socket Sock) {
-		Socket = Sock;
+		this.Socket = Sock;
 		try {
-			In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
-			Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
+			this.Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
+			this.In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
+			Out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public synchronized static boolean readAvailable() {
+	public static boolean readAvailable() {
 		boolean retval = false;
 		try {
-			 retval = In.ready();
+			synchronized(Socket) {
+			retval = In.ready();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return retval;
 	}
 	
-	public synchronized static void flushSocket() {
+	public static void flushSocket() {
 		try {
+			synchronized(Socket) {
 			In.skip(9999);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public synchronized static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
+	public static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
 		try {
 			// check parameters
 			
 			// create packet and send
+			synchronized(Socket){
 			String out = "" + 
 					(char) type +
 					(char) cmd +
@@ -51,31 +57,17 @@ public class Packet {
 			Out.write(out);
 			Out.newLine();
 			Out.flush();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public synchronized static String[] readPacket() {
+	public static String[] readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
-			/*int type = In.read();
-			int cmd = In.read();
-			int size = In.read();
-			int isfrag = In.read();
-			int fragp = In.read();*/
-			
-			//char data[] = new char[size];
-			//In.read(data,0,size);
-			
-			/*retval[0] = Integer.toString(type);
-			retval[1] = Integer.toString(cmd);
-			retval[2] = Integer.toString(size);
-			retval[3] = Integer.toString(isfrag);
-			retval[4] = Integer.toString(fragp);
-			retval[5] = new String(data);*/
-			
+			synchronized(Socket) {
 			String raw = In.readLine();
 			
 			retval[0] = ""+ (int)raw.charAt(0);
@@ -84,6 +76,7 @@ public class Packet {
 			retval[3] = ""+ (int)raw.charAt(3);
 			retval[4] = ""+ (int)raw.charAt(4);
 			retval[5] = ""+ raw.substring(5);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
