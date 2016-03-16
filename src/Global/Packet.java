@@ -11,8 +11,9 @@ public class Packet {
 	public Packet(Socket Sock) {
 		Socket = Sock;
 		try {
-			In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
 			Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
+			In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
+			Out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
