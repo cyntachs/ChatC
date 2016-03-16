@@ -26,6 +26,7 @@ public class ClientNet {
 		
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
+			ClientSocket.setKeepAlive(true);
 			print("client connecting to server");
 		} catch (UnknownHostException e) {
 			print("Unknown host");

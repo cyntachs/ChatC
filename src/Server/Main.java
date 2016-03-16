@@ -78,11 +78,13 @@ public class Main {
 				newClient.start();
 			}*/
 			try {
-				Socket NewClient = ServerSocket.accept();
+				Socket NewClient = null;
+				NewClient = ServerSocket.accept();
+				NewClient.setKeepAlive(true);
 				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
 				
 				ClientHandler NewClientHandler = new ClientHandler(nextClientID,NewClient,debug);
-				//NewClientHandler.setDaemon(true);
+				NewClientHandler.setDaemon(true);
 				NewClientHandler.start();
 				
 				ClientHandlerThreads.add(NewClientHandler);
@@ -103,12 +105,3 @@ public class Main {
 		}
 	}
 }
-
-/*
- * Bugs:
- * - When new client joins, previous client handler would read packet sent by new client instead
- *   - Might be because of synchronization errors (try to implement InputStream/OutputStream instead)
- *   - use BufferedReader & PrintWriter
- * - "MessageHandler received invalid data/Data is null" bug
- * 
- */

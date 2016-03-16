@@ -13,28 +13,26 @@ public class ClientHandler extends Thread {
 	
 	private static Packet Packet;
 	
-	//private static ServerSocket ServerSocket;
 	private static Socket ClientSocket;
 	
 	private String RoomID;
 	private String Username;
 	
-	private void print(String dbg) {
+	private synchronized void print(String dbg) {
 		if (debug) {
 			System.out.println("[CliHandl"+ThreadID+"]: "+dbg);
 		}
 	}
 	
 	public ClientHandler (int id,Socket Client, boolean dbg) {
-		debug = dbg;
-		ReqTerminate = false;
-		isConnected = false;
-		ThreadID = id;
+		this.debug = dbg;
+		this.ReqTerminate = false;
+		this.isConnected = false;
+		this.ThreadID = id;
 		
-		Packet = new Packet(Client);
+		this.ClientSocket = Client;
 		
-		ClientSocket = Client;
-		//ServerSocket = serv;
+		Packet = new Packet(this.ClientSocket);
 	}
 	
 	protected int getID() {return ThreadID;}
@@ -58,8 +56,12 @@ public class ClientHandler extends Thread {
 	}
 	
 	private void MessageHandler() {
+		if (!ClientSocket.isConnected()){
+			print("Socket unexpectedly closed!");
+			return;
+		}
 		if (!Packet.readAvailable()) return;
-		print("Received message");
+		print("Read Available");
 		
 		String[] data = Packet.readPacket();
 		

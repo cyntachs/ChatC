@@ -26,7 +26,9 @@ public class ClientListener extends Thread {
 	public void run() {
 		while(!ReqTerminate) {
 			try {
-				Socket NewClient = ServerSocket.accept();
+				Socket NewClient = null;
+				NewClient = ServerSocket.accept();
+				NewClient.setKeepAlive(true);
 				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
 				
 				ClientHandler NewClientHandler = new ClientHandler(nextClient,NewClient,Debug);

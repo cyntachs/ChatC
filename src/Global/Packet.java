@@ -4,17 +4,18 @@ import java.net.*;
 import java.io.*;
 
 public class Packet {
+	private static Socket Socket;
 	private static BufferedReader In;
 	private static BufferedWriter Out;
 	
-	public Packet(Socket Socket) {
+	public Packet(Socket Sock) {
+		Socket = Sock;
 		try {
-			In = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-			Out = new BufferedWriter(new OutputStreamWriter(Socket.getOutputStream()));
+			In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
+			Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public synchronized static boolean readAvailable() {
