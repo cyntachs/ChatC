@@ -60,13 +60,11 @@ public class ClientHandler extends Thread {
 			print("Socket unexpectedly closed!");
 			return;
 		}
-		String[] data = null;
-		synchronized(ClientSocket) {
-			if (!Packet.readAvailable()) return;
-			print("Read Available");
-			
-			data = Packet.readPacket();
-		}
+		if (!Packet.readAvailable()) return;
+		print("Read Available");
+		
+		String[] data = Packet.readPacket();
+		
 		if (data == null || data[0] == null) {
 			print("MessageHandler received invalid data");
 			if (data == null) print("Data is null"); else
