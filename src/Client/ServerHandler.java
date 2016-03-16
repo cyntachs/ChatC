@@ -1,7 +1,10 @@
 package Client;
 
+import Global.Packet;
+
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class ServerHandler extends Thread {
 	private boolean debug;
@@ -9,6 +12,8 @@ public class ServerHandler extends Thread {
 	protected static boolean isConnected;
 	
 	private static Socket ClientSocket;
+	
+	private static Packet Packet;
 	
 	private String Data;
 	
@@ -22,6 +27,8 @@ public class ServerHandler extends Thread {
 		debug = dbg;
 		ReqTerminate = false;
 		ClientSocket = cli;
+		
+		Packet = new Packet(cli);
 	}
 	
 	protected static Socket getClientSocket() {
@@ -39,15 +46,17 @@ public class ServerHandler extends Thread {
 			//ConAuth();
 		//}
 		int count = 1;
+		Scanner keyin = new Scanner(System.in);
 		while (!ReqTerminate) {
+			keyin.nextLine();
 			Packet.writePacket(1, 14, 5, false, 1, "Packet "+count);
 			print("Test packet "+count+" sent");
 			count++;
-			try {
+			/*try {
 				Thread.sleep(2000); //1000 milliseconds is one second.
 			} catch(InterruptedException ex) {
 				Thread.currentThread().interrupt();
-			}
+			}*/
 		}
 	}
 	
