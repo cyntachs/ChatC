@@ -44,42 +44,25 @@ public class Main {
 		ClientHandlerThreads = new Vector<ClientHandler>();
 		
 		// init server socket
-		/*try {
+		try {
 			ServerSocket = new ServerSocket(ServerPort);
 			//ServerSocket.setSoTimeout(10000);
 			print("Server listening in port "+ServerPort);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		print("Server initialized");
 		
-		// Server routine
-		//ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,debug);
-		//newClient.setDaemon(true);
-		//newClient.start();
-		
 		// client listener version
-		ClientListener Listener = new ClientListener(ServerPort,debug);
+		/*ClientListener Listener = new ClientListener(ServerPort,debug);
 		Listener.setDaemon(true);
 		Listener.start();
-		print("Client listener started");
+		print("Client listener started");*/
 		
 		print("Server routine start");
 		while (!Term) {
-			// Add new client
-			/*if (newClient.getConnectionStatus()) {
-				// add new connected client
-				ClientHandlerThreads.add(newClient);
-				print("Added new client");
-				
-				// create new client handler
-				nextClientID++;
-				newClient = new ClientHandler(nextClientID,ServerSocket,debug);
-				newClient.setDaemon(true);
-				newClient.start();
-			}*/
-			/*try {
+			try {
 				Socket NewClient = null;
 				NewClient = ServerSocket.accept();
 				NewClient.setKeepAlive(true);
@@ -95,7 +78,7 @@ public class Main {
 				nextClientID++;
 			} catch (IOException e) {
 				e.printStackTrace();
-			}*/
+			}
 			
 			// remove dead threads (prevent memory leak)
 			synchronized(ClientHandlerThreads) {

@@ -23,6 +23,7 @@ public class ClientListener extends Thread {
 		ServerPort = Port;
 		try {
 			ServerSocket = new ServerSocket(ServerPort);
+			ServerSocket.setReuseAddress(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		};
@@ -41,10 +42,10 @@ public class ClientListener extends Thread {
 				
 				ClientHandler NewClientHandler = new ClientHandler(nextClient,NewClient,Debug);
 				NewClientHandler.setDaemon(true);
-				NewClientHandler.start();
 				synchronized(Main.ClientHandlerThreads) {
 					Main.ClientHandlerThreads.add(NewClientHandler);
 				}
+				NewClientHandler.start();
 				print("Added new client");
 				
 				nextClient++;

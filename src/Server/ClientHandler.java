@@ -9,12 +9,12 @@ import java.util.*;
 public class ClientHandler extends Thread {
 	private boolean debug;
 	private boolean ReqTerminate;
-	protected static boolean isConnected;
+	private boolean isConnected;
 	private int ThreadID;
 	
-	private static Packet Packet;
+	private Packet P;
 	
-	private static Socket ClientSocket;
+	private Socket ClientSocket;
 	
 	private String RoomID;
 	private String Username;
@@ -33,15 +33,15 @@ public class ClientHandler extends Thread {
 		
 		this.ClientSocket = Client;
 		
-		this.Packet = new Packet(this.ClientSocket);
+		this.P = new Packet(this.ClientSocket);
 	}
 	
 	protected int getID() {return ThreadID;}
-	protected boolean getConnectionStatus() {return isConnected;}
+	public boolean isConnected() {return isConnected;}
 	
-	protected static void send(String data) {
+	protected void send(String data) {
 		synchronized(ClientSocket) {
-			Packet.writePacket(1, 14, data.length(), false, 1, data);
+			P.writePacket(1, 14, data.length(), false, 1, data);
 		}
 	}
 	
@@ -59,10 +59,10 @@ public class ClientHandler extends Thread {
 				print("Socket unexpectedly closed!");
 				return;
 			}
-			if (!Packet.readAvailable()) return;
+			if (!P.readAvailable()) return;
 			print("Read Available");
 			
-			data = Packet.readPacket();
+			data = P.readPacket();
 			
 			if (data == null || data[0] == null) {
 				print("MessageHandler received invalid data");
@@ -79,6 +79,8 @@ public class ClientHandler extends Thread {
 				"Fragment part #: "+data[4]+"\n"+
 				"[Data]\n"+data[5]);
 		
+		send(data[5]); // debug
+		
 		switch(data[0]) {
 		case "0":
 			// message is a command
@@ -88,7 +90,7 @@ public class ClientHandler extends Thread {
 			// check for valid packet tags
 			if (data[1] != "14") return;
 			// broadcast to everyone else
-			Main.Broadcast(data[6],this);
+			Main.Broadcast(data[5],this);
 			break;
 		default:
 			// error
@@ -106,19 +108,7 @@ public class ClientHandler extends Thread {
 					return;
 				}
 			}
-			//MessageHandler();
-			try {
-				synchronized(ClientSocket) {
-					BufferedReader In = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
-					if (In.ready()) {
-						String data = In.readLine();
-						print(data);
-						send(data.substring(5));
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			MessageHandler();
 		}
 	}
 	

@@ -19,11 +19,11 @@ public enum Command {
 	REQ_CON(2) {
 		public void run(String[] args) {
 			// handle client request for connection
-			if (!ClientHandler.isConnected) {
+			//if (){
 				// authenticate client
 				// isConnected = true
 				// return
-			}
+			//}
 		}
 	},
 	DATA(14) {

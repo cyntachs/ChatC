@@ -62,6 +62,8 @@ public class ServerHandler extends Thread {
 					if (In.ready()) {
 						String data = In.readLine();
 						print(data);
+					} else {
+						print("no read");
 					}
 				}
 			} catch (IOException e) {

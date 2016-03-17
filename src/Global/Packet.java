@@ -4,9 +4,9 @@ import java.net.*;
 import java.io.*;
 
 public class Packet {
-	private static Socket Socket;
-	private static BufferedReader In;
-	private static BufferedWriter Out;
+	private Socket Socket;
+	private BufferedReader In;
+	private BufferedWriter Out;
 	
 	public Packet(Socket Sock) {
 		this.Socket = Sock;
@@ -21,7 +21,7 @@ public class Packet {
 		}
 	}
 	
-	public static boolean readAvailable() {
+	public boolean readAvailable() {
 		boolean retval = false;
 		try {
 			synchronized(Socket) {
@@ -33,7 +33,7 @@ public class Packet {
 		return retval;
 	}
 	
-	public static void flushSocket() {
+	public void flushSocket() {
 		try {
 			synchronized(Socket) {
 			In.skip(9999);
@@ -43,7 +43,7 @@ public class Packet {
 		}
 	}
 	
-	public static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
+	public void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
 		try {
 			// check parameters
 			
@@ -66,7 +66,7 @@ public class Packet {
 		}
 	}
 	
-	public static String[] readPacket() {
+	public String[] readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
