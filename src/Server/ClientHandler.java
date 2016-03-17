@@ -40,7 +40,9 @@ public class ClientHandler extends Thread {
 	protected boolean getConnectionStatus() {return isConnected;}
 	
 	protected static void send(String data) {
-		Packet.writePacket(1, 14, data.length(), false, 1, data);
+		synchronized(ClientSocket) {
+			Packet.writePacket(1, 14, data.length(), false, 1, data);
+		}
 	}
 	
 	private boolean ConAuth() {
@@ -51,12 +53,12 @@ public class ClientHandler extends Thread {
 	}
 	
 	private void MessageHandler() {
-		if (!ClientSocket.isConnected()){
-			print("Socket unexpectedly closed!");
-			return;
-		}
 		String[] data = null;
 		synchronized(ClientSocket) {
+			if (!ClientSocket.isConnected()){
+				print("Socket unexpectedly closed!");
+				return;
+			}
 			if (!Packet.readAvailable()) return;
 			print("Read Available");
 			
@@ -97,16 +99,21 @@ public class ClientHandler extends Thread {
 	public void run() {
 		print("Client handler thread running. ID "+ThreadID);
 		while (!ReqTerminate) {
-			if (ClientSocket.isClosed()) {
-				print("Socket closed");
-				return;
+			// debug
+			synchronized(ClientSocket) {
+				if (ClientSocket.isClosed()) {
+					print("Socket closed");
+					return;
+				}
 			}
 			//MessageHandler();
 			try {
 				synchronized(ClientSocket) {
 					BufferedReader In = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
 					if (In.ready()) {
-						print(In.readLine());
+						String data = In.readLine();
+						print(data);
+						send(data.substring(5));
 					}
 				}
 			} catch (IOException e) {

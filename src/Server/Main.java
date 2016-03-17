@@ -26,10 +26,12 @@ public class Main {
 	}
 	
 	public synchronized static void Broadcast(String data, ClientHandler except) {
-		for (ClientHandler client : ClientHandlerThreads) {
-			if (client != except) {
-				print("Broadcasting to "+client.getID());
-				client.send(data);
+		synchronized(ClientHandlerThreads) {
+			for (ClientHandler client : ClientHandlerThreads) {
+				if (client != except) {
+					print("Broadcasting to "+client.getID());
+					client.send(data);
+				}
 			}
 		}
 	}
@@ -42,13 +44,13 @@ public class Main {
 		ClientHandlerThreads = new Vector<ClientHandler>();
 		
 		// init server socket
-		try {
+		/*try {
 			ServerSocket = new ServerSocket(ServerPort);
 			//ServerSocket.setSoTimeout(10000);
 			print("Server listening in port "+ServerPort);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		print("Server initialized");
 		
@@ -58,10 +60,10 @@ public class Main {
 		//newClient.start();
 		
 		// client listener version
-		//ClientListener Listener = new ClientListener(ServerSocket,debug);
-		//Listener.setDaemon(true);
-		//Listener.start();
-		//print("Client listener started");
+		ClientListener Listener = new ClientListener(ServerPort,debug);
+		Listener.setDaemon(true);
+		Listener.start();
+		print("Client listener started");
 		
 		print("Server routine start");
 		while (!Term) {
@@ -77,7 +79,7 @@ public class Main {
 				newClient.setDaemon(true);
 				newClient.start();
 			}*/
-			try {
+			/*try {
 				Socket NewClient = null;
 				NewClient = ServerSocket.accept();
 				NewClient.setKeepAlive(true);
@@ -93,13 +95,15 @@ public class Main {
 				nextClientID++;
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			// remove dead threads (prevent memory leak)
-			for (ClientHandler c : ClientHandlerThreads) {
-				if (!c.isAlive()) {
-					print("Removing thread "+c.getID()+"");
-					//ClientHandlerThreads.remove(c);
+			synchronized(ClientHandlerThreads) {
+				for (ClientHandler c : ClientHandlerThreads) {
+					if (!c.isAlive()) {
+						print("Removing thread "+c.getID()+"");
+						ClientHandlerThreads.remove(c);
+					}
 				}
 			}
 		}

@@ -11,9 +11,11 @@ public class Packet {
 	public Packet(Socket Sock) {
 		this.Socket = Sock;
 		try {
-			this.Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
-			this.In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
-			Out.flush();
+			synchronized(Socket) {
+				this.Out = new BufferedWriter(new OutputStreamWriter(Socket.getOutputStream()));
+				this.In = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+				Out.flush();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -46,7 +48,6 @@ public class Packet {
 			// check parameters
 			
 			// create packet and send
-			synchronized(Socket){
 			String out = "" + 
 					(char) type +
 					(char) cmd +
@@ -54,6 +55,8 @@ public class Packet {
 					(char) ((isfrag)? 1:0) +
 					(char) fragp + 
 					D;
+			
+			synchronized(Socket){
 			Out.write(out);
 			Out.newLine();
 			Out.flush();
@@ -67,8 +70,11 @@ public class Packet {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
+			String raw = null;
+			
 			synchronized(Socket) {
-			String raw = In.readLine();
+			raw = In.readLine();
+			}
 			
 			retval[0] = ""+ (int)raw.charAt(0);
 			retval[1] = ""+ (int)raw.charAt(1);
@@ -76,7 +82,6 @@ public class Packet {
 			retval[3] = ""+ (int)raw.charAt(3);
 			retval[4] = ""+ (int)raw.charAt(4);
 			retval[5] = ""+ raw.substring(5);
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
