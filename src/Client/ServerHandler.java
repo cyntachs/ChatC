@@ -51,12 +51,25 @@ public class ServerHandler extends Thread {
 			keyin.nextLine();
 			Packet.writePacket(1, 14, 5, false, 1, "Packet "+count);
 			print("Test packet "+count+" sent");
-			count++;
-			/*try {
-				Thread.sleep(2000); //1000 milliseconds is one second.
+			try {
+				Thread.sleep(500); //1000 milliseconds is one second.
 			} catch(InterruptedException ex) {
 				Thread.currentThread().interrupt();
-			}*/
+			}
+			try {
+				synchronized(ClientSocket) {
+					BufferedReader In = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
+					if (In.ready()) {
+						String data = In.readLine();
+						print(data);
+					} else {
+						print("no read");
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			count++;
 		}
 	}
 	

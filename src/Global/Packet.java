@@ -4,22 +4,24 @@ import java.net.*;
 import java.io.*;
 
 public class Packet {
-	private static Socket Socket;
-	private static BufferedReader In;
-	private static BufferedWriter Out;
+	private Socket Socket;
+	private BufferedReader In;
+	private BufferedWriter Out;
 	
 	public Packet(Socket Sock) {
 		this.Socket = Sock;
 		try {
-			this.Out = new BufferedWriter(new OutputStreamWriter(Sock.getOutputStream()));
-			this.In = new BufferedReader(new InputStreamReader(Sock.getInputStream()));
-			Out.flush();
+			synchronized(Socket) {
+				this.Out = new BufferedWriter(new OutputStreamWriter(Socket.getOutputStream()));
+				this.In = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+				Out.flush();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static boolean readAvailable() {
+	public boolean readAvailable() {
 		boolean retval = false;
 		try {
 			synchronized(Socket) {
@@ -31,7 +33,7 @@ public class Packet {
 		return retval;
 	}
 	
-	public static void flushSocket() {
+	public void flushSocket() {
 		try {
 			synchronized(Socket) {
 			In.skip(9999);
@@ -41,12 +43,11 @@ public class Packet {
 		}
 	}
 	
-	public static void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
+	public void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
 		try {
 			// check parameters
 			
 			// create packet and send
-			synchronized(Socket){
 			String out = "" + 
 					(char) type +
 					(char) cmd +
@@ -54,6 +55,8 @@ public class Packet {
 					(char) ((isfrag)? 1:0) +
 					(char) fragp + 
 					D;
+			
+			synchronized(Socket){
 			Out.write(out);
 			Out.newLine();
 			Out.flush();
@@ -63,12 +66,15 @@ public class Packet {
 		}
 	}
 	
-	public static String[] readPacket() {
+	public String[] readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
+			String raw = null;
+			
 			synchronized(Socket) {
-			String raw = In.readLine();
+			raw = In.readLine();
+			}
 			
 			retval[0] = ""+ (int)raw.charAt(0);
 			retval[1] = ""+ (int)raw.charAt(1);
@@ -76,7 +82,6 @@ public class Packet {
 			retval[3] = ""+ (int)raw.charAt(3);
 			retval[4] = ""+ (int)raw.charAt(4);
 			retval[5] = ""+ raw.substring(5);
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -26,10 +26,12 @@ public class Main {
 	}
 	
 	public synchronized static void Broadcast(String data, ClientHandler except) {
-		for (ClientHandler client : ClientHandlerThreads) {
-			if (client != except) {
-				print("Broadcasting to "+client.getID());
-				client.send(data);
+		synchronized(ClientHandlerThreads) {
+			for (ClientHandler client : ClientHandlerThreads) {
+				if (client != except) {
+					print("Broadcasting to "+client.getID());
+					client.send(data);
+				}
 			}
 		}
 	}
@@ -52,31 +54,14 @@ public class Main {
 		
 		print("Server initialized");
 		
-		// Server routine
-		//ClientHandler newClient = new ClientHandler(nextClientID,ServerSocket,debug);
-		//newClient.setDaemon(true);
-		//newClient.start();
-		
 		// client listener version
-		//ClientListener Listener = new ClientListener(ServerSocket,debug);
-		//Listener.setDaemon(true);
-		//Listener.start();
-		//print("Client listener started");
+		/*ClientListener Listener = new ClientListener(ServerPort,debug);
+		Listener.setDaemon(true);
+		Listener.start();
+		print("Client listener started");*/
 		
 		print("Server routine start");
 		while (!Term) {
-			// Add new client
-			/*if (newClient.getConnectionStatus()) {
-				// add new connected client
-				ClientHandlerThreads.add(newClient);
-				print("Added new client");
-				
-				// create new client handler
-				nextClientID++;
-				newClient = new ClientHandler(nextClientID,ServerSocket,debug);
-				newClient.setDaemon(true);
-				newClient.start();
-			}*/
 			try {
 				Socket NewClient = null;
 				NewClient = ServerSocket.accept();
@@ -96,10 +81,12 @@ public class Main {
 			}
 			
 			// remove dead threads (prevent memory leak)
-			for (ClientHandler c : ClientHandlerThreads) {
-				if (!c.isAlive()) {
-					print("Removing thread "+c.getID()+"");
-					//ClientHandlerThreads.remove(c);
+			synchronized(ClientHandlerThreads) {
+				for (ClientHandler c : ClientHandlerThreads) {
+					if (!c.isAlive()) {
+						print("Removing thread "+c.getID()+"");
+						ClientHandlerThreads.remove(c);
+					}
 				}
 			}
 		}

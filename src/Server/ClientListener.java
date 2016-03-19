@@ -9,6 +9,7 @@ public class ClientListener extends Thread {
 	private boolean Debug;
 	
 	private ServerSocket ServerSocket;
+	private int ServerPort;
 	private int nextClient;
 	
 	private void print(String dbg) {
@@ -17,9 +18,16 @@ public class ClientListener extends Thread {
 		}
 	}
 	
-	public ClientListener(ServerSocket Sock, boolean dbg) {
+	public ClientListener(int Port, boolean dbg) {
 		Debug = dbg;
-		ServerSocket = Sock;
+		ServerPort = Port;
+		try {
+			ServerSocket = new ServerSocket(ServerPort);
+			ServerSocket.setReuseAddress(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+		print("Server listening on port "+ServerPort);
 		nextClient = 1;
 	}
 	
@@ -29,13 +37,15 @@ public class ClientListener extends Thread {
 				Socket NewClient = null;
 				NewClient = ServerSocket.accept();
 				NewClient.setKeepAlive(true);
-				print("Connection from "+NewClient.getRemoteSocketAddress()+"");
+				NewClient.setSoTimeout(1000);
+				print("Received connection from "+NewClient.getRemoteSocketAddress()+"");
 				
 				ClientHandler NewClientHandler = new ClientHandler(nextClient,NewClient,Debug);
 				NewClientHandler.setDaemon(true);
+				synchronized(Main.ClientHandlerThreads) {
+					Main.ClientHandlerThreads.add(NewClientHandler);
+				}
 				NewClientHandler.start();
-				
-				Main.ClientHandlerThreads.add(NewClientHandler);
 				print("Added new client");
 				
 				nextClient++;
