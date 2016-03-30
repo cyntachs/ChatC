@@ -133,9 +133,11 @@ public class LoginGUI extends javax.swing.JFrame {
 			Username = Username_Textfield.getText();   //Get the user name
 			Password = new String(Password_textfield.getPassword()); //Get the password
 			if(AccountExist()){
+				ClientNet clientnet = new ClientNet();
 				this.setVisible(false);
-				ClientGUI Client1 = new ClientGUI();
+				ClientGUI Client1 = new ClientGUI(clientnet);
 				Client1.setVisible(true);
+				Client1.setSize(800,600);
 			}
 		}
 	}                                            
