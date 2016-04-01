@@ -10,16 +10,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class TripleDES {
 
-    public static void main(String[] args) throws Exception {
-
-    	String text = "kyle boon";
-
-    	byte[] codedtext = new TripleDES().encrypt(text);
-    	String decodedtext = new TripleDES().decrypt(codedtext);
-
-    	System.out.println(codedtext); // this is a byte array, you'll just see a reference to an array
-    	System.out.println(decodedtext); // This correctly shows "kyle boon"
-    }
+//    public static void main(String[] args) throws Exception {
+//
+//    }
 
     public byte[] encrypt(String message) throws Exception {
     	final MessageDigest md = MessageDigest.getInstance("md5");
