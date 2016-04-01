@@ -40,37 +40,12 @@ public class ServerHandler extends Thread {
 		Packet.writePacket(0,2,logindata.length(),false,1,logindata);
 	}
 	
+	public void Send(String d) {
+		Packet.writePacket(1, 14, d.length(), false, 0, d);
+	}
+	
 	public void run() {
-		// Authenticate
-		//while(!ReqTerminate) {
-			//ConAuth();
-		//}
-		int count = 1;
-		Scanner keyin = new Scanner(System.in);
-		while (!ReqTerminate) {
-			keyin.nextLine();
-			Packet.writePacket(1, 14, 5, false, 1, "Packet "+count);
-			print("Test packet "+count+" sent");
-			try {
-				Thread.sleep(500); //1000 milliseconds is one second.
-			} catch(InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-			try {
-				synchronized(ClientSocket) {
-					BufferedReader In = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
-					if (In.ready()) {
-						String data = In.readLine();
-						print(data);
-					} else {
-						print("no read");
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			count++;
-		}
+		
 	}
 	
 	protected void finalize() {
