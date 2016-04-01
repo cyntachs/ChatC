@@ -3,6 +3,7 @@ package Client;
 import java.io.*;
 import java.net.*;
 
+<<<<<<< HEAD
 public class ClientNet {
 	private boolean debug;
 	
@@ -44,5 +45,13 @@ public class ClientNet {
 	
 	public void receive() {
 		
+=======
+// Sockets thread class
+
+public class ClientNet{
+	public int getid(String roomnumber){
+		//connect to server to ask for chatroomid
+		return 0;
+>>>>>>> refs/remotes/origin/pr/4
 	}
 }
