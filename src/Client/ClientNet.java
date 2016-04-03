@@ -2,28 +2,40 @@ package Client;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class ClientNet {
-	private boolean debug;
+	// debug
+	private boolean DEBUG;
 	
+	// Socket
 	private int ServerPort;
 	private InetAddress ServerAddress;
 	private Socket ClientSocket;
 	
+	// Thread
 	private ServerHandler ServerHandler;
 	
+	// User info
+	private String AuthToken;
+	private String Username;
+	private String Password;
+	
+	// Debug
 	private void print(String dbg) {
-		if (debug) {
+		if (DEBUG) {
 			System.out.println("[ClientNet]: "+dbg);
 		}
 	}
 	
+	// constructor
 	public ClientNet(InetAddress addr) {
-		debug = true;
+		DEBUG = true;
 		
-		ServerPort = 3680;
+		ServerPort = 36801;
 		ServerAddress = addr;
 		
+		// connect to server
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
 			ClientSocket.setKeepAlive(true);
@@ -34,22 +46,29 @@ public class ClientNet {
 			e.printStackTrace();
 		}
 		print("Client connected");
-		ServerHandler = new ServerHandler(ClientSocket,debug);
+		ServerHandler = new ServerHandler(ClientSocket,DEBUG);
 		ServerHandler.start();
 	}
 	
-	public void send(String data) {
+	// communication
+	public void Send(String data) {
 		
 	}
 	
-	public void receive() {
+	public void Receive() {
 		
-=======
-// Sockets thread class
-
-public class ClientNet{
-	public int getid(String roomnumber){
-		//connect to server to ask for chatroomid
+	}
+	
+	// Server communications
+	public HashMap<Integer,String> GetChatRooms() {
+		return null;
+	}
+	
+	public void JoinChatRoom() {
+		
+	}
+	
+	public int GetID(String roomnumber){
 		return 0;
 	}
 }

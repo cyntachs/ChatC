@@ -7,26 +7,32 @@ import java.net.*;
 import java.util.*;
 
 public class ClientHandler extends Thread {
-	private boolean debug;
+	// Thread
+	private boolean DEBUG;
 	private boolean ReqTerminate;
-	private boolean isConnected;
 	private int ThreadID;
 	
+	// Packet read/writer
 	private Packet P;
 	
+	// Sockets
 	private Socket ClientSocket;
+	private boolean isConnected;
 	
-	private String RoomID;
+	// User info
 	private String Username;
+	private String AuthToken;
 	
+	// debug
 	private synchronized void print(String dbg) {
-		if (debug) {
+		if (DEBUG) {
 			System.out.println("[CliHandl"+ThreadID+"]: "+dbg);
 		}
 	}
 	
+	// constructor
 	public ClientHandler (int id,Socket Client, boolean dbg) {
-		this.debug = dbg;
+		this.DEBUG = dbg;
 		this.ReqTerminate = false;
 		this.isConnected = false;
 		this.ThreadID = id;
@@ -36,22 +42,33 @@ public class ClientHandler extends Thread {
 		this.P = new Packet(this.ClientSocket);
 	}
 	
+	// access functions
 	protected int getID() {return ThreadID;}
 	public boolean isConnected() {return isConnected;}
+	public String getToken() {return AuthToken;}
+	public String getUsername() {return Username;}
 	
-	protected void send(String data) {
+	// communication
+	protected void send(String data) { 
+		// send to client
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, data.length(), false, 1, data);
 		}
 	}
 	
-	private boolean ConAuth() {
-		// authentication
-		print("Client authorized");
-		isConnected = true;
-		return true;
+//	private boolean ConAuth() {
+//		// authentication
+//		print("Client authorized");
+//		isConnected = true;
+//		return true;
+//	}
+	
+	// AuthToken Generator
+	private String GenerateAuthToken() {
+		return "";
 	}
 	
+	// Message Handler
 	private void MessageHandler() {
 		String[] data = null;
 		synchronized(ClientSocket) {
@@ -90,7 +107,7 @@ public class ClientHandler extends Thread {
 			// check for valid packet tags
 			if (data[1] != "14") return;
 			// broadcast to everyone else
-			Main.Broadcast(data[5],this);
+			Command.get(Integer.parseInt(data[1])).run(new Object[]{data[5],AuthToken});
 			break;
 		default:
 			// error
@@ -98,6 +115,7 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	// Main Routine
 	public void run() {
 		print("Client handler thread running. ID "+ThreadID);
 		while (!ReqTerminate) {
@@ -112,6 +130,7 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	// term handler
 	protected void finalize() {
 		print("Thread closing");
 		try {
