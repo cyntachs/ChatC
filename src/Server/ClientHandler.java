@@ -1,6 +1,7 @@
 package Server;
 
 import Global.Packet;
+import Global.Packet.PacketData;
 
 import java.io.*;
 import java.net.*;
@@ -56,13 +57,6 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-//	private boolean ConAuth() {
-//		// authentication
-//		print("Client authorized");
-//		isConnected = true;
-//		return true;
-//	}
-	
 	// AuthToken Generator
 	private String GenerateAuthToken() {
 		return "";
@@ -70,7 +64,7 @@ public class ClientHandler extends Thread {
 	
 	// Message Handler
 	private void MessageHandler() {
-		String[] data = null;
+		PacketData data = null;
 		synchronized(ClientSocket) {
 			if (!ClientSocket.isConnected()){
 				print("Socket unexpectedly closed!");
@@ -81,36 +75,37 @@ public class ClientHandler extends Thread {
 			
 			data = P.readPacket();
 			
-			if (data == null || data[0] == null) {
+			if (data == null) {
 				print("MessageHandler received invalid data");
-				if (data == null) print("Data is null"); else
-				if (data[0] == null) print("Data is empty");
+				if (data == null) print("Data is null");
+				//if (data[0] == null) print("Data is empty");
 				return;
 			}
 		}
-		print("\nPacket Dump: ["+data[0]+"-"+data[1]+"-"+data[2]+"-"+data[3]+"-"+data[4]+"-"+data[5]+"]\n"+
-				"Message Type:    "+data[0]+"\n"+
-				"Command:         "+data[1]+"\n"+
-				"Data Size:       "+data[2]+"\n"+
-				"Is fragmented:   "+data[3]+"\n"+
-				"Fragment part #: "+data[4]+"\n"+
-				"[Data]\n"+data[5]);
+		print("\nPacket Dump: ["+data.DataType()+"-"+data.Command()+"-"+data.Size()+"-"+data.isFragmented()+"-"+data.FragmentPart()+"-"+data.Data()+"]\n"+
+				"Message Type:    "+data.DataType()+"\n"+
+				"Command:         "+data.Command()+"\n"+
+				"Data Size:       "+data.Size()+"\n"+
+				"Is fragmented:   "+data.isFragmented()+"\n"+
+				"Fragment part #: "+data.FragmentPart()+"\n"+
+				"[Data]\n"+data.Data());
 		
-		send(data[5]); // debug
+		send(data.Data()); // debug
 		
-		switch(data[0]) {
-		case "0":
+		switch(data.DataType()) {
+		case 0:
 			// message is a command
-			Command.get(Integer.parseInt(data[1])).run(null);
+			Command.get(data.Command()).run(new Object[]{this,data});
 			break;
-		case "1":
+		case 1:
 			// check for valid packet tags
-			if (data[1] != "14") return;
+			if (data.Command() != 14) return;
 			// broadcast to everyone else
-			Command.get(Integer.parseInt(data[1])).run(new Object[]{data[5],AuthToken});
+			Command.get(14).run(new Object[]{this,data});
 			break;
 		default:
 			// error
+			print("Received Unknown Command");
 			break;
 		}
 	}

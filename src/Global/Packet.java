@@ -8,6 +8,31 @@ public class Packet {
 	private BufferedReader In;
 	private BufferedWriter Out;
 	
+	public class PacketData {
+		private int type;
+		private int command;
+		private int size;
+		private boolean isfragmented;
+		private int fragpart;
+		private String data;
+		
+		public PacketData(String[] a) {
+			type = Integer.parseInt(a[0]);
+			command = Integer.parseInt(a[1]);
+			size = Integer.parseInt(a[2]);
+			isfragmented = (a[3] != "0");
+			fragpart = Integer.parseInt(a[4]);
+			data = a[5];
+		}
+		
+		public int DataType() {return type;}
+		public int Command() {return command;}
+		public int Size() {return size;}
+		public boolean isFragmented() {return isfragmented;}
+		public int FragmentPart() {return fragpart;}
+		public String Data() {return data;}
+	}
+	
 	public Packet(Socket Sock) {
 		this.Socket = Sock;
 		try {
@@ -66,7 +91,7 @@ public class Packet {
 		}
 	}
 	
-	public String[] readPacket() {
+	public PacketData readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		try {
@@ -85,6 +110,6 @@ public class Packet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return retval;
+		return new PacketData(retval);
 	}
 }

@@ -1,5 +1,7 @@
 package Server;
 
+import Global.Packet;
+
 public enum Command {
 	DEFAULT(-1) {
 		public void run(Object[] args) {
@@ -19,17 +21,30 @@ public enum Command {
 	REQ_CON(2) {
 		public void run(Object[] args) {
 			// handle client request for connection
-			//if (){
-				// authenticate client
-				// isConnected = true
-				// return
-			//}
+			// TODO authenticate user
+			// TODO generate AuthToken
+		}
+	},
+	// 3,4 sent by server never received
+	ERR_CON(5) {
+		public void run(Object[] args) {
+			
+		}
+	},
+	ACK(6) {
+		public void run(Object[] args) {
+			
+		}
+	},
+	TERM_CON(9) {
+		public void run(Object[] args) {
+			// handle request to terminate connection
 		}
 	},
 	DATA(14) {
 		public void run(Object[] args) {
 			// handle data received from client
-			Main.GlobalBroadcast(0, (String) args[0], (String) args[1]);
+			Main.Broadcast(0, ((Packet.PacketData) args[1]).Data(), ((ClientHandler) args[0]).getToken());
 		}
 	},
 	RET_STAT(15) {
