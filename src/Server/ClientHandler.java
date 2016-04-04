@@ -57,6 +57,13 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	protected void send(String data, int command) {
+		// send to client
+		synchronized(ClientSocket) {
+			P.writePacket(0, command, data.length(), false, 1, data);
+		}
+	}
+	
 	// AuthToken Generator
 	private String GenerateAuthToken() {
 		return "";

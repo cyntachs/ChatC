@@ -21,6 +21,9 @@ public class ClientNet {
 	private String Username;
 	private String Password;
 	
+	// Data
+	protected String Data;
+	
 	// Debug
 	private void print(String dbg) {
 		if (DEBUG) {
@@ -34,7 +37,9 @@ public class ClientNet {
 		
 		ServerPort = 36801;
 		ServerAddress = addr;
-		
+	}
+	
+	public void Connect(String uname, String passwd) {
 		// connect to server
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
@@ -52,11 +57,18 @@ public class ClientNet {
 	
 	// communication
 	public void Send(String data) {
-		
+		ServerHandler.Send(data);
 	}
 	
-	public void Receive() {
-		
+	public boolean Ready() {
+		return ServerHandler.readReady();
+	}
+	
+	public String Receive() {
+		if (Ready())
+			return ServerHandler.getData();
+		else
+			return "";
 	}
 	
 	// Server communications
@@ -68,7 +80,11 @@ public class ClientNet {
 		
 	}
 	
-	public int GetID(String roomnumber){
+	public void LeaveChatRoom(int index) {
+		
+	}
+	
+	public int GetID(String roomnumber){ // Deprecated
 		return 0;
 	}
 }
