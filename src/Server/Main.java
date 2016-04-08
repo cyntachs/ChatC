@@ -159,6 +159,7 @@ public class Main {
 				// create client handler thread
 				ClientHandler NewClientHandler = new ClientHandler(NextClientID,NewClient,DEBUG);
 				NewClientHandler.setDaemon(true);
+				NewClientHandler.AssignToken();
 				NewClientHandler.start();
 				
 				// add to thread pool

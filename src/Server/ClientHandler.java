@@ -5,6 +5,7 @@ import Global.Packet.PacketData;
 
 import java.io.*;
 import java.net.*;
+import java.security.SecureRandom;
 import java.util.*;
 
 public class ClientHandler extends Thread {
@@ -38,6 +39,9 @@ public class ClientHandler extends Thread {
 		this.isConnected = false;
 		this.ThreadID = id;
 		
+		this.Username = "";
+		this.AuthToken = "";
+		
 		this.ClientSocket = Client;
 		
 		this.P = new Packet(this.ClientSocket);
@@ -64,9 +68,43 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	public String toBase64(long l) {
+		char[] table = {
+				'0','1','2','3','4','5','6','7','8','9',
+				'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+				'!','?',
+		};
+		String retval = "";
+		long q = l;
+		do {
+			double d = q/64.0;
+			long i = (long) d;
+			double f = d - (double)i;
+			retval = table[(int)(64.0*f)] + retval;
+			q = i;
+		} while (q > 64);
+		retval = table[(int) q] + retval;
+		return retval;
+	}
+
 	// AuthToken Generator
 	private String GenerateAuthToken() {
-		return "";
+		SecureRandom rinit = new SecureRandom();
+		byte[] rn = new byte[20];
+		rinit.nextBytes(rn);
+		SecureRandom rand = new SecureRandom(rn);
+		for (int i = 0; i < 10; i++) {
+			rand.nextLong();
+		}
+		return toBase64(Math.abs(rand.nextLong()));
+	}
+	
+	protected void AssignToken() {
+		String token = GenerateAuthToken();
+		while (Main.CheckAuthTokenUsed(token))
+			token = GenerateAuthToken();
+		AuthToken = token;
 	}
 	
 	// Message Handler

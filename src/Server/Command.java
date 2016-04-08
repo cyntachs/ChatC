@@ -68,6 +68,7 @@ public enum Command {
 	},
 	DATA(14) {
 		public void run(Object[] args) { // handle data received from client
+			// extract room number from data
 			// for now broadcast on room 0
 			Main.Broadcast(0, ((PacketData) args[1]).Data(), ((ClientHandler) args[0]).getToken());
 		}

@@ -56,8 +56,8 @@ public class ClientNet {
 	}
 	
 	// communication
-	public void Send(String data) {
-		ServerHandler.Send(data);
+	public void Send(String data, int index) {
+		ServerHandler.Send(data, index);
 	}
 	
 	public boolean Ready() {
@@ -76,7 +76,7 @@ public class ClientNet {
 		return null;
 	}
 	
-	public void JoinChatRoom() {
+	public void JoinChatRoom(int index) {
 		
 	}
 	

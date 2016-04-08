@@ -52,7 +52,7 @@ public class ServerHandler extends Thread {
 	}
 	
 	// send to server
-	public void Send(String d) {
+	public void Send(String d, int index) {
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, d.length(), false, 0, d);
 		}

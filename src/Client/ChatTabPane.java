@@ -32,7 +32,7 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 	 */
 	public ChatTabPane(ClientNet x, String roomName) {
 		clientnet = x;
-		chatRoomid = clientnet.getid(roomName);
+		chatRoomid = clientnet.GetID(roomName);
 		initComponents();
 	}
 
