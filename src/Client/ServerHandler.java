@@ -88,7 +88,7 @@ public class ServerHandler extends Thread {
 				"[Data]\n"+data.Data());
 		// TODO do stuff with message
 		Command.get(data.Command()).run(new Object[]{this,data});
-		Data = data.Data();
+		//Data = data.Data();
 	}
 	
 	// main routine

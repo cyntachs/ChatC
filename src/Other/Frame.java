@@ -57,4 +57,7 @@ public class Frame extends JFrame {
 		setSize(500,450);
 		setVisible(true); // display frame
 	};
+	public static void main(String[] args) {
+		new Frame();
+	}
 }
