@@ -73,6 +73,7 @@ public class ClientNet {
 	
 	// Server communications
 	public HashMap<Integer,String> GetChatRooms() {
+		ServerHandler.SendCommand(1,"GetServerRooms");
 		return null;
 	}
 	

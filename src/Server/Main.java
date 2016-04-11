@@ -89,7 +89,7 @@ public class Main {
 					else
 						msg = "[Unknown]: "+msg;
 				}
-				c.send(msg);
+				c.Send(msg);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class Main {
 				else
 					msg = "[Unknown]: "+msg;
 			}
-			c.send(msg);
+			c.Send(msg);
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class Main {
 				// create client handler thread
 				ClientHandler NewClientHandler = new ClientHandler(NextClientID,NewClient,DEBUG);
 				NewClientHandler.setDaemon(true);
-				NewClientHandler.AssignToken();
+				NewClientHandler.AssignToken(); // debug
 				NewClientHandler.start();
 				
 				// add to thread pool

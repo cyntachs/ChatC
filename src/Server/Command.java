@@ -33,7 +33,7 @@ public enum Command {
 					serval += element;
 				}
 				// send return status packet containing the data
-				client.send(serval,15);
+				client.Send(serval,15);
 				break;
 			}
 			default: {

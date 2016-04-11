@@ -53,21 +53,28 @@ public class ClientHandler extends Thread {
 	public String getToken() {return AuthToken;}
 	public String getUsername() {return Username;}
 	
-	// communication
-	protected void send(String data) { 
-		// send to client
+	// send message to client
+	protected void Send(String data) { 
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, data.length(), false, 1, data);
 		}
 	}
 	
-	protected void send(String data, int command) {
-		// send to client
+	// send message to client
+	protected void Send(String data, int command) {
 		synchronized(ClientSocket) {
 			P.writePacket(0, command, data.length(), false, 1, data);
 		}
 	}
 	
+	// Send command to client
+	protected void SendCommand(int cmd, String data) {
+		synchronized(ClientSocket) {
+			P.writePacket(0,cmd,data.length(),false,1,data);
+		}
+	}
+	
+	// convert long int to base64
 	public String toBase64(long l) {
 		char[] table = {
 				'0','1','2','3','4','5','6','7','8','9',
@@ -87,7 +94,7 @@ public class ClientHandler extends Thread {
 		retval = table[(int) q] + retval;
 		return retval;
 	}
-
+	
 	// AuthToken Generator
 	private String GenerateAuthToken() {
 		SecureRandom rinit = new SecureRandom();
@@ -100,6 +107,7 @@ public class ClientHandler extends Thread {
 		return toBase64(Math.abs(rand.nextLong()));
 	}
 	
+	// Assigns thread with an Authentication Token
 	protected void AssignToken() {
 		String token = GenerateAuthToken();
 		while (Main.CheckAuthTokenUsed(token))
@@ -135,7 +143,7 @@ public class ClientHandler extends Thread {
 				"Fragment part #: "+data.FragmentPart()+"\n"+
 				"[Data]\n"+data.Data());
 		
-		send(data.Data()); // debug
+		Send(data.Data()); // debug
 		
 		switch(data.DataType()) {
 		case 0:

@@ -134,7 +134,7 @@ public class LoginGUI extends javax.swing.JFrame {
 			Password = new String(Password_textfield.getPassword()); //Get the password
 			//if(AccountExist()){
 			this.setVisible(false);
-			ChatTabPane Client1 = new ChatTabPane(null,);
+			ChatTabPane Client1 = new ChatTabPane(null,null);
 			Client1.setVisible(true);
 			//}
 			/*if(AccountExist()){

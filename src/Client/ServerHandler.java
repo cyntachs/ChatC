@@ -54,7 +54,14 @@ public class ServerHandler extends Thread {
 	// send to server
 	public void Send(String d, int index) {
 		synchronized(ClientSocket) {
-			P.writePacket(1, 14, d.length(), false, 0, d);
+			P.writePacket(1, 14, d.length(), false, 1, d);
+		}
+	}
+	
+	// commands
+	public void SendCommand(int cmd, String data) {
+		synchronized(ClientSocket) {
+			P.writePacket(0, cmd, data.length(), false, 1, data);
 		}
 	}
 	
