@@ -46,8 +46,18 @@ public enum Command {
 		public void run(Object[] args) {
 			// handle client request for connection
 			// TODO authenticate user && send DEC_CON if declined
-			// TODO generate AuthToken
-			// TODO send ACC_CON
+			// TODO send ACC_CON w/ AuthToken
+			String data = ((PacketData) args[1]).Data();
+			String token = ((ClientHandler) args[0]).getToken();
+			
+			// extract username and password
+			String uname = data.split(".")[0];
+			String passwd = data.split(".")[1];
+			
+			// search database
+			
+			// if auth then send ACC_CON
+			// else send DEC_CON & terminate thread
 		}
 	},
 	// 3,4 sent by server never received
@@ -63,14 +73,29 @@ public enum Command {
 	},
 	TERM_CON(9) {
 		public void run(Object[] args) {
-			// handle request to terminate connection
+			// handle client request to terminate connection
 		}
 	},
 	DATA(14) {
 		public void run(Object[] args) { // handle data received from client
+			String data = ((PacketData) args[1]).Data();
+			String token = ((ClientHandler) args[0]).getToken();
+			
+			// extract AuthToken
+			int aulen = (int)data.charAt(0);
+			String autoken = data.substring(1, aulen+1);
+			
+			// check authtoken
+			if (token != autoken) {
+				((ClientHandler) args[0]).Error_InvalidAuthToken();
+				return;
+			}
+			
 			// extract room number from data
-			// for now broadcast on room 0
-			Main.Broadcast(0, ((PacketData) args[1]).Data(), ((ClientHandler) args[0]).getToken());
+			int rindex = (int)data.charAt(aulen+1); // range 0-255 encoded in ascii
+			
+			// broadcast
+			Main.Broadcast(rindex, data.substring(aulen+2), token);
 		}
 	},
 	RET_STAT(15) {

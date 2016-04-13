@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.*;
 
 public class Main {
+	// -------------------- Variables -------------------- //
+	
 	// Const
 	private static final boolean DEBUG = true;
 	private static final int ServerPort = 36801;
@@ -21,6 +23,8 @@ public class Main {
 	
 	// Sockets
 	private ServerSocket ServerSocket;
+	
+	// -------------------- Functions -------------------- //
 	
 	// debug print function
 	private static void print (String msg) {
@@ -141,12 +145,7 @@ public class Main {
 		// debug init
 		CreateRoom("Debug Room","8084");
 		
-		// client listener version
-		/*ClientListener Listener = new ClientListener(ServerPort,debug);
-		Listener.setDaemon(true);
-		Listener.start();
-		print("Client listener started");*/
-		
+		// start server routine
 		print("Server routine start");
 		while (!Term) {
 			try {
@@ -159,7 +158,6 @@ public class Main {
 				// create client handler thread
 				ClientHandler NewClientHandler = new ClientHandler(NextClientID,NewClient,DEBUG);
 				NewClientHandler.setDaemon(true);
-				NewClientHandler.AssignToken(); // debug
 				NewClientHandler.start();
 				
 				// add to thread pool
@@ -176,8 +174,10 @@ public class Main {
 			synchronized(ClientHandlerThreads) {
 				for (ClientHandler c : ClientHandlerThreads) {
 					if (!c.isAlive()) {
-						// remove from chat room
-						
+						// remove from chat rooms
+						for (int key : ChatRooms_Members.keySet()) {
+							RemoveMember(key, c.getToken());
+						}
 						// remove from pool
 						print("Removing thread "+c.getID()+"");
 						ClientHandlerThreads.remove(c);

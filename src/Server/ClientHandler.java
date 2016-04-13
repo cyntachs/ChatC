@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.util.*;
 
 public class ClientHandler extends Thread {
+	// -------------------- Variables -------------------- //
 	// Thread
 	private boolean DEBUG;
 	private boolean ReqTerminate;
@@ -24,6 +25,8 @@ public class ClientHandler extends Thread {
 	// User info
 	private String Username;
 	private String AuthToken;
+	
+	// -------------------- Functions -------------------- //
 	
 	// debug
 	private synchronized void print(String dbg) {
@@ -45,6 +48,8 @@ public class ClientHandler extends Thread {
 		this.ClientSocket = Client;
 		
 		this.P = new Packet(this.ClientSocket);
+		
+		this.AssignToken();
 	}
 	
 	// access functions
@@ -115,6 +120,11 @@ public class ClientHandler extends Thread {
 		AuthToken = token;
 	}
 	
+	// Error
+	protected void Error_InvalidAuthToken() {
+		print("Client sent invalid Authentication Token!");
+	}
+	
 	// Message Handler
 	private void MessageHandler() {
 		PacketData data = null;
@@ -163,6 +173,8 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	public void Stop(){ReqTerminate = true;}
+	
 	// Main Routine
 	public void run() {
 		print("Client handler thread running. ID "+ThreadID);
@@ -180,7 +192,17 @@ public class ClientHandler extends Thread {
 	
 	// term handler
 	protected void finalize() {
-		print("Thread closing");
+		if (DEBUG)
+			print("Thread closing");
+		// send a terminate connection to client
+		SendCommand(9,"");
+		// wait before closing socket
+		try {
+			this.wait(100);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		// close the socket
 		try {
 			ClientSocket.close();
 		} catch (IOException e) {

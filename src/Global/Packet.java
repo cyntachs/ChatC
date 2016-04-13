@@ -94,22 +94,23 @@ public class Packet {
 	public PacketData readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
+		String raw = null;
 		try {
-			String raw = null;
-			
+			// read socket
 			synchronized(Socket) {
 			raw = In.readLine();
 			}
-			
-			retval[0] = ""+ (int)raw.charAt(0);
-			retval[1] = ""+ (int)raw.charAt(1);
-			retval[2] = ""+ (int)raw.charAt(2);
-			retval[3] = ""+ (int)raw.charAt(3);
-			retval[4] = ""+ (int)raw.charAt(4);
-			retval[5] = ""+ raw.substring(5);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {e.printStackTrace();}
+		// check is size parameter is correct
+		if (((int)raw.charAt(2)) != raw.substring(5).length())
+			return null;
+		// extract data
+		retval[0] = ""+ (int)raw.charAt(0);
+		retval[1] = ""+ (int)raw.charAt(1);
+		retval[2] = ""+ (int)raw.charAt(2);
+		retval[3] = ""+ (int)raw.charAt(3);
+		retval[4] = ""+ (int)raw.charAt(4);
+		retval[5] = ""+ raw.substring(5);
 		return new PacketData(retval);
 	}
 }

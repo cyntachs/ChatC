@@ -2,6 +2,8 @@ package Client;
 
 import java.io.*;
 import java.net.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class ClientNet {
@@ -15,11 +17,6 @@ public class ClientNet {
 	
 	// Thread
 	private ServerHandler ServerHandler;
-	
-	// User info
-	private String AuthToken;
-	private String Username;
-	private String Password;
 	
 	// Data
 	protected String Data;
@@ -53,11 +50,22 @@ public class ClientNet {
 		print("Client connected");
 		ServerHandler = new ServerHandler(ClientSocket,DEBUG);
 		ServerHandler.start();
+		
+		// Hash password
+		try {
+			MessageDigest Hash = MessageDigest.getInstance("SHA-256");
+			Hash.update(passwd.getBytes("UTF-8"));
+			passwd = String.format("%064x", new java.math.BigInteger(1, Hash.digest()));
+		} catch (NoSuchAlgorithmException e) {e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {e.printStackTrace();}
+		
+		// authenticate
+		ServerHandler.Authenticate(uname, passwd);
 	}
 	
 	// communication
-	public void Send(String data, int index) {
-		ServerHandler.Send(data, index);
+	public void Send(String data, int rindex) {
+		ServerHandler.Send(data, rindex);
 	}
 	
 	public boolean Ready() {

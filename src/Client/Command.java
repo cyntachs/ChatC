@@ -27,6 +27,11 @@ public enum Command {
 	ACC_CON(4) {
 		public void run(Object[] args) {
 			// handle server accept connection
+			// TODO extract AuthToken
+			String data = ((PacketData) args[1]).Data();
+			
+			((ServerHandler) args[0]).AuthToken = data;
+			((ServerHandler) args[0]).isAuthenticated = true;
 		}
 	},
 	ERR_CON(5) {
