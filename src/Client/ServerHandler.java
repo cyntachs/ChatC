@@ -99,6 +99,14 @@ public class ServerHandler extends Thread {
 				return;
 			}
 		}
+		
+		// check data
+		if (data.GetError() != null){
+			print(data.GetError());
+			return;
+		}
+		
+		// debug
 		print("\nPacket Dump: ["+data.DataType()+"-"+data.Command()+"-"+data.Size()+"-"+data.isFragmented()+"-"+data.FragmentPart()+"-"+data.Data()+"]\n"+
 				"Message Type:    "+data.DataType()+"\n"+
 				"Command:         "+data.Command()+"\n"+

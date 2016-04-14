@@ -36,7 +36,13 @@ public class ClientNet {
 		ServerAddress = addr;
 	}
 	
-	public boolean Connect(String uname, String passwd) {
+	public class AuthPoll {
+		public boolean Check() {
+			return (ServerHandler.getAuthStatus() == 2)? true:false;
+		}
+	}
+	
+	public AuthPoll Connect(String uname, String passwd) {
 		// connect to server
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
@@ -61,15 +67,15 @@ public class ClientNet {
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
-		while (ServerHandler.getAuthStatus() >= 1) {
+		/*while (ServerHandler.getAuthStatus() >= 1) {
 			//print("waiting");
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {e.printStackTrace();}
 			if (ServerHandler.getAuthStatus() == 2)
 				return true;
-		}
-		return false;
+		}*/
+		return new AuthPoll();
 	}
 	
 	// communication

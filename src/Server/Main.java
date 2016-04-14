@@ -81,18 +81,11 @@ public class Main {
 	// room broadcast
 	// TODO handle html formatted text
 	public synchronized static void Broadcast(int index, String msg, String from) { // from is an AuthToken
+		print("[Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
 		for (ClientHandler c : ClientHandlerThreads) {
 			if (ChatRooms_Members.get(index).contains(c.getToken())) {
 				if (c.getToken() == from) continue;
 				String uname = GetUsername(from);
-				if (uname != "") {
-					msg = "["+uname+"]: "+msg;
-				} else {
-					if (DEBUG)
-						msg = "["+from+"]: "+msg;
-					else
-						msg = "[Unknown]: "+msg;
-				}
 				c.Send(msg);
 			}
 		}
@@ -101,16 +94,9 @@ public class Main {
 	// global broadcast
 	// TODO handle html formatted text
 	public synchronized static void GlobalBroadcast(int index, String msg, String from) { // from is an AuthToken
+		print("[Global Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
 		for (ClientHandler c : ClientHandlerThreads) {
 			String uname = GetUsername(from);
-			if (uname != "") {
-				msg = "["+uname+"]: "+msg;
-			} else {
-				if (DEBUG)
-					msg = "["+from+"]: "+msg;
-				else
-					msg = "[Unknown]: "+msg;
-			}
 			c.Send(msg);
 		}
 	}

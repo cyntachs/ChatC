@@ -44,7 +44,7 @@ public enum Command {
 					serval += element;
 				}
 				// send return status packet containing the data
-				client.Send(serval,15);
+				client.SendCommand(15,serval);
 				break;
 			}
 			default: {
@@ -71,6 +71,7 @@ public enum Command {
 			// if auth then send ACC_CON
 			// else send DEC_CON & terminate thread
 			client.SendCommand(4, token); // debug
+			Main.AddMember(0, token); // debug
 		}
 	},
 	// 3,4 sent by server never received

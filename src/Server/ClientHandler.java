@@ -65,13 +65,6 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-	// send message to client
-	protected void Send(String data, int command) {
-		synchronized(ClientSocket) {
-			P.writePacket(0, command, data.length(), false, 1, data);
-		}
-	}
-	
 	// Send command to client
 	protected void SendCommand(int cmd, String data) {
 		synchronized(ClientSocket) {
@@ -145,6 +138,14 @@ public class ClientHandler extends Thread {
 				return;
 			}
 		}
+		
+		// check data
+		if (data.GetError() != null){
+			print(data.GetError());
+			return;
+		}
+		
+		// debug
 		print("\nPacket Dump: ["+data.DataType()+"-"+data.Command()+"-"+data.Size()+"-"+data.isFragmented()+"-"+data.FragmentPart()+"-"+data.Data()+"]\n"+
 				"Message Type:    "+data.DataType()+"\n"+
 				"Command:         "+data.Command()+"\n"+
