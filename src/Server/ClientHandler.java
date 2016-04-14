@@ -121,8 +121,8 @@ public class ClientHandler extends Thread {
 	}
 	
 	// Error
-	protected void Error_InvalidAuthToken() {
-		print("Client sent invalid Authentication Token!");
+	protected void Error_InvalidAuthToken(String err) {
+		print("Client sent invalid Authentication Token! "+err);
 	}
 	
 	// Message Handler
@@ -153,7 +153,7 @@ public class ClientHandler extends Thread {
 				"Fragment part #: "+data.FragmentPart()+"\n"+
 				"[Data]\n"+data.Data());
 		
-		Send(data.Data()); // debug
+		//Send(data.Data()); // debug
 		
 		switch(data.DataType()) {
 		case 0:

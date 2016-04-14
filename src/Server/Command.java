@@ -16,15 +16,26 @@ public enum Command {
 	},
 	REQ_STAT(1) {
 		public void run(Object[] args) {// handle client request for server stat
-			PacketData data = (PacketData) args[1];
+			String data = ((PacketData) args[1]).Data();
+			String token = ((ClientHandler) args[0]).getToken();
+			PacketData pdata = (PacketData) args[1];
 			ClientHandler client = (ClientHandler) args[0];
 			// check packet headers for security
-			if ((data.DataType() != 0) && (data.Command() != 1)) {
+			if ((pdata.DataType() != 0) && (pdata.Command() != 1)) {
 				// error
 				return;
 			}
+			// extract AuthToken
+			int aulen = (int)data.charAt(0);
+			String autoken = data.substring(1, aulen+1);
+
+			// check authtoken
+			if (!autoken.equals(token)) {
+				((ClientHandler) args[0]).Error_InvalidAuthToken(autoken+" != "+token);
+				return;
+			}
 			// check request
-			switch(data.Data()) {
+			switch(data.substring(aulen+1)) {
 			case "GetServerRooms": { // client asks for list of chatrooms
 				// serialize ChatRooms
 				String serval = "GetServerRooms;";
@@ -47,17 +58,19 @@ public enum Command {
 			// handle client request for connection
 			// TODO authenticate user && send DEC_CON if declined
 			// TODO send ACC_CON w/ AuthToken
+			ClientHandler client = ((ClientHandler) args[0]);
 			String data = ((PacketData) args[1]).Data();
-			String token = ((ClientHandler) args[0]).getToken();
+			String token = client.getToken();
 			
 			// extract username and password
-			String uname = data.split(".")[0];
-			String passwd = data.split(".")[1];
+			//String uname = data.split(".")[0];
+			//String passwd = data.split(".")[1];
 			
 			// search database
 			
 			// if auth then send ACC_CON
 			// else send DEC_CON & terminate thread
+			client.SendCommand(4, token); // debug
 		}
 	},
 	// 3,4 sent by server never received
@@ -86,8 +99,8 @@ public enum Command {
 			String autoken = data.substring(1, aulen+1);
 			
 			// check authtoken
-			if (token != autoken) {
-				((ClientHandler) args[0]).Error_InvalidAuthToken();
+			if (!autoken.equals(token)) {
+				((ClientHandler) args[0]).Error_InvalidAuthToken(autoken+" != "+token);
 				return;
 			}
 			

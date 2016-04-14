@@ -2,7 +2,6 @@ package Client;
 
 import Global.Packet;
 import Global.Packet.PacketData;
-import Server.Command;
 
 import java.io.*;
 import java.net.*;
@@ -13,7 +12,7 @@ public class ServerHandler extends Thread {
 	// Vars
 	private boolean DEBUG;
 	private boolean ReqTerminate;
-	protected boolean isAuthenticated;
+	protected int AuthStatus; // 0 - none, 1 - authenticating, 2 - authenticated, -1 - declined
 	
 	// Socket
 	private Socket ClientSocket;
@@ -40,7 +39,7 @@ public class ServerHandler extends Thread {
 	ServerHandler(Socket cli, boolean dbg) {
 		this.DEBUG = dbg;
 		this.ReqTerminate = false;
-		this.isAuthenticated = false;
+		this.AuthStatus = 0;
 		this.ClientSocket = cli;
 		
 		P = new Packet(ClientSocket);
@@ -50,6 +49,7 @@ public class ServerHandler extends Thread {
 	protected Socket getClientSocket() {return ClientSocket;}
 	protected boolean readReady() {return P.readAvailable();}
 	protected String getData() {return Data;}
+	protected int getAuthStatus() {return AuthStatus;}
 	
 	// authenticate user
 	public void Authenticate(String uname, String passwd) {
@@ -58,10 +58,12 @@ public class ServerHandler extends Thread {
 		synchronized(ClientSocket) {
 			P.writePacket(0,2,logindata.length(),false,1,logindata);
 		}
+		AuthStatus = 1;
 	}
 	
 	// send to server
 	public void Send(String d, int rindex) {
+		if (AuthStatus != 2) return;
 		String dataf = ((char)AuthToken.length()) + AuthToken + ((char) rindex) + d;
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, dataf.length(), false, 1, dataf);
@@ -70,6 +72,7 @@ public class ServerHandler extends Thread {
 	
 	// commands
 	public void SendCommand(int cmd, String d) {
+		if (AuthStatus != 2) return;
 		String dataf = ((char)AuthToken.length()) + AuthToken + d;
 		synchronized(ClientSocket) {
 			P.writePacket(0, cmd, dataf.length(), false, 1, dataf);

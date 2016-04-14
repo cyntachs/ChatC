@@ -36,7 +36,7 @@ public class ClientNet {
 		ServerAddress = addr;
 	}
 	
-	public void Connect(String uname, String passwd) {
+	public boolean Connect(String uname, String passwd) {
 		// connect to server
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
@@ -61,6 +61,15 @@ public class ClientNet {
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
+		while (ServerHandler.getAuthStatus() >= 1) {
+			//print("waiting");
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+			if (ServerHandler.getAuthStatus() == 2)
+				return true;
+		}
+		return false;
 	}
 	
 	// communication
@@ -79,9 +88,10 @@ public class ClientNet {
 			return "";
 	}
 	
-	// Server communications
+	// Server commands
 	public HashMap<Integer,String> GetChatRooms() {
-		ServerHandler.SendCommand(1,"GetServerRooms");
+		String autokenhdr = ((char)ServerHandler.AuthToken.length()) + ServerHandler.AuthToken;
+		ServerHandler.SendCommand(1,autokenhdr+"GetServerRooms");
 		return null;
 	}
 	
@@ -91,9 +101,5 @@ public class ClientNet {
 	
 	public void LeaveChatRoom(int index) {
 		
-	}
-	
-	public int GetID(String roomnumber){ // Deprecated
-		return 0;
 	}
 }

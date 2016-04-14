@@ -12,8 +12,8 @@ public class Main {
 	private static final int ServerPort = 36801;
 	
 	// vars
-	private boolean Term;
-	private int NextClientID;
+	private static boolean Term;
+	private static int NextClientID;
 	
 	// Chat room system
 	protected static int NextRoomIndex;
@@ -22,7 +22,7 @@ public class Main {
 	protected static Vector<ClientHandler> ClientHandlerThreads; // threads
 	
 	// Sockets
-	private ServerSocket ServerSocket;
+	private static ServerSocket ServerSocket;
 	
 	// -------------------- Functions -------------------- //
 	
@@ -116,7 +116,7 @@ public class Main {
 	}
 	
 	// Main Routine
-	public void main(String[] args) {
+	public static void main(String[] args) {
 		// Initializations
 		Term = false;
 		NextClientID = 0;

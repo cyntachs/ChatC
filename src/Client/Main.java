@@ -18,7 +18,11 @@ public class Main {
 	public static void main(String[] args) {
 		print("Starting connection");
 		try {
-			new ClientNet(InetAddress.getLocalHost());
+			ClientNet cn = new ClientNet(InetAddress.getLocalHost());
+			boolean ret = cn.Connect("user","pass");
+			print(ret? "T":"F");
+			cn.Send("Testing 1 2 3.", 0);
+			print("sent test message");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

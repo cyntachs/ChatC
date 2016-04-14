@@ -22,6 +22,7 @@ public enum Command {
 	DEC_CON(3) {
 		public void run(Object[] args) {
 			// handler server decline connection
+			((ServerHandler) args[0]).AuthStatus = -1;
 		}
 	},
 	ACC_CON(4) {
@@ -31,7 +32,7 @@ public enum Command {
 			String data = ((PacketData) args[1]).Data();
 			
 			((ServerHandler) args[0]).AuthToken = data;
-			((ServerHandler) args[0]).isAuthenticated = true;
+			((ServerHandler) args[0]).AuthStatus = 2;
 		}
 	},
 	ERR_CON(5) {
@@ -59,6 +60,7 @@ public enum Command {
 	RET_STAT(15) {
 		public void run(Object[] args) {
 			// handle received status
+			String data = ((PacketData) args[1]).Data();
 		}
 	}
 	;
