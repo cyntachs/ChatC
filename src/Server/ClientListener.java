@@ -42,8 +42,8 @@ public class ClientListener extends Thread {
 				
 				ClientHandler NewClientHandler = new ClientHandler(nextClient,NewClient,Debug);
 				NewClientHandler.setDaemon(true);
-				synchronized(Main.ClientHandlerThreads) {
-					Main.ClientHandlerThreads.add(NewClientHandler);
+				synchronized(Server.ClientHandlerThreads) {
+					Server.ClientHandlerThreads.add(NewClientHandler);
 				}
 				NewClientHandler.start();
 				print("Added new client");
