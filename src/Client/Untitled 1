@@ -1,0 +1,14 @@
+
+
+sendchatroom(data, index)
+clientnet(user, $hash)
+
+
+
+
+done
+leavechatroom(index)	
+salt store in client
+joinchatroom (index)
+Getchatroom
+	hashmap (id , roomname)
