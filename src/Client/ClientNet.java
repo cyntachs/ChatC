@@ -67,14 +67,6 @@ public class ClientNet {
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
-		/*while (ServerHandler.getAuthStatus() >= 1) {
-			//print("waiting");
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {e.printStackTrace();}
-			if (ServerHandler.getAuthStatus() == 2)
-				return true;
-		}*/
 		return new AuthPoll();
 	}
 	
