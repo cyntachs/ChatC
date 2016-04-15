@@ -2,28 +2,51 @@ package Client;
 
 import java.io.*;
 import java.net.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 public class ClientNet {
-	private boolean debug;
+	// debug
+	private boolean DEBUG;
 	
+	// Socket
 	private int ServerPort;
 	private InetAddress ServerAddress;
 	private Socket ClientSocket;
 	
+	// Thread
 	private ServerHandler ServerHandler;
 	
+	// Data
+	protected String Data;
+	
+	// Debug
 	private void print(String dbg) {
-		if (debug) {
+		if (DEBUG) {
 			System.out.println("[ClientNet]: "+dbg);
 		}
 	}
 	
+	// constructor
 	public ClientNet(InetAddress addr) {
-		debug = true;
+		DEBUG = true;
 		
-		ServerPort = 3680;
+		ServerPort = 36801;
 		ServerAddress = addr;
-		
+	}
+	
+	public class AuthPoll {
+		public boolean Check() {
+			return (ServerHandler.getAuthStatus() == 2)? true:false;
+		}
+		public boolean isDeclined() {
+			return (ServerHandler.getAuthStatus() == -1)? true:false;
+		}
+	}
+	
+	public AuthPoll Connect(String uname, String passwd) {
+		// connect to server
 		try {
 			ClientSocket = new Socket(ServerAddress,ServerPort);
 			ClientSocket.setKeepAlive(true);
@@ -34,22 +57,56 @@ public class ClientNet {
 			e.printStackTrace();
 		}
 		print("Client connected");
-		ServerHandler = new ServerHandler(ClientSocket,debug);
+		ServerHandler = new ServerHandler(ClientSocket,DEBUG);
 		ServerHandler.start();
+		
+		// Hash password
+		/*try {
+			MessageDigest Hash = MessageDigest.getInstance("SHA-256");
+			Hash.update(passwd.getBytes("UTF-8"));
+			passwd = String.format("%064x", new java.math.BigInteger(1, Hash.digest()));
+		} catch (NoSuchAlgorithmException e) {e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {e.printStackTrace();}*/
+		
+		// authenticate
+		ServerHandler.Authenticate(uname, passwd);
+		return new AuthPoll();
 	}
 	
-	public void send(String data) {
+	// communication
+	public void Send(String data, int rindex) {
+		ServerHandler.Send(data, rindex);
+	}
+	
+	public boolean Ready() {
+		return ServerHandler.readReady();
+	}
+	
+	public String Receive() {
+		if (Ready())
+			return ServerHandler.getData();
+		else
+			return "";
+	}
+	
+	// Server commands
+	public HashMap<Integer,String> GetChatRooms() {
+		String autokenhdr = ((char)ServerHandler.AuthToken.length()) + ServerHandler.AuthToken;
+		ServerHandler.SendCommand(1,autokenhdr+"GetServerRooms");
+		return null;
+	}
+	
+	public void JoinChatRoom(int index) {
 		
 	}
 	
-	public void receive() {
+	public void LeaveChatRoom(int index) {
 		
-=======
-// Sockets thread class
-
-public class ClientNet{
-	public int getid(String roomnumber){
-		//connect to server to ask for chatroomid
-		return 0;
+	}
+	
+	// Close connection
+	public void CloseConnection() {
+		ServerHandler.SendTerminate();
+		ServerHandler.Stop();
 	}
 }

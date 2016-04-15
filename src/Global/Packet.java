@@ -8,6 +8,35 @@ public class Packet {
 	private BufferedReader In;
 	private BufferedWriter Out;
 	
+	public class PacketData {
+		private int type;
+		private int command;
+		private int size;
+		private boolean isfragmented;
+		private int fragpart;
+		private String data;
+		private String Error;
+		
+		public PacketData(String[] a) {
+			type = Integer.parseInt(a[0]);
+			command = Integer.parseInt(a[1]);
+			size = Integer.parseInt(a[2]);
+			isfragmented = (a[3] != "0");
+			fragpart = Integer.parseInt(a[4]);
+			data = a[5];
+			Error = null;
+		}
+		public PacketData(String e) {Error = e;}
+		
+		public int DataType() {return type;}
+		public int Command() {return command;}
+		public int Size() {return size;}
+		public boolean isFragmented() {return isfragmented;}
+		public int FragmentPart() {return fragpart;}
+		public String Data() {return data;}
+		public String GetError() {return Error;}
+	}
+	
 	public Packet(Socket Sock) {
 		this.Socket = Sock;
 		try {
@@ -59,32 +88,40 @@ public class Packet {
 			synchronized(Socket){
 			Out.write(out);
 			Out.newLine();
-			Out.flush();
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Out.flush();
+		} catch (IOException e) {
+			System.out.println("[Packet] Could not flush buffer!");
 			e.printStackTrace();
 		}
 	}
 	
-	public String[] readPacket() {
+	public PacketData readPacket() {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
+		String raw = null;
 		try {
-			String raw = null;
-			
+			// read socket
 			synchronized(Socket) {
 			raw = In.readLine();
 			}
-			
-			retval[0] = ""+ (int)raw.charAt(0);
-			retval[1] = ""+ (int)raw.charAt(1);
-			retval[2] = ""+ (int)raw.charAt(2);
-			retval[3] = ""+ (int)raw.charAt(3);
-			retval[4] = ""+ (int)raw.charAt(4);
-			retval[5] = ""+ raw.substring(5);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return retval;
+		} catch (IOException e) {e.printStackTrace();}
+		// check if header is not malformed
+		if (raw.length() < 5) return new PacketData("Malformed Header");
+		// check is size parameter is correct
+		if (((int)raw.charAt(2)) != raw.substring(5).length())
+			return new PacketData("Incorrect Data Size");
+		// extract data
+		retval[0] = ""+ (int)raw.charAt(0);
+		retval[1] = ""+ (int)raw.charAt(1);
+		retval[2] = ""+ (int)raw.charAt(2);
+		retval[3] = ""+ (int)raw.charAt(3);
+		retval[4] = ""+ (int)raw.charAt(4);
+		retval[5] = ""+ raw.substring(5);
+		return new PacketData(retval);
 	}
 }

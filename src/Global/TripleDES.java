@@ -1,4 +1,4 @@
-package Client;
+package Global;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
