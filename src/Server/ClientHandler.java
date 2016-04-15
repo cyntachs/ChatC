@@ -141,7 +141,7 @@ public class ClientHandler extends Thread {
 	// Assigns thread with an Authentication Token
 	protected void AssignToken() {
 		String token = GenerateAuthToken();
-		while (Main.CheckAuthTokenUsed(token))
+		while (Server.CheckAuthTokenUsed(token))
 			token = GenerateAuthToken();
 		AuthToken = token;
 	}

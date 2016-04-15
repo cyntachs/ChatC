@@ -41,8 +41,8 @@ public enum Command {
 			case "GetServerRooms": { // client asks for list of chatrooms
 				// serialize ChatRooms
 				String serval = "GetServerRooms;";
-				for (int i = 0; i < Main.ChatRooms.size(); i++) {
-					String element = "" + i + "," + (String) Main.ChatRooms.get(i).get("Room Name") + ";";
+				for (int i = 0; i < Server.ChatRooms.size(); i++) {
+					String element = "" + i + "," + (String) Server.ChatRooms.get(i).get("Room Name") + ";";
 					serval += element;
 				}
 				// send return status packet containing the data
@@ -73,7 +73,7 @@ public enum Command {
 			// if auth then send ACC_CON
 			// else send DEC_CON & terminate thread
 			client.SendCommand(4, token); // debug
-			Main.AddMember(0, token); // debug
+			Server.AddMember(0, token); // debug
 		}
 	},
 	// 3,4 sent by server never received
@@ -114,7 +114,7 @@ public enum Command {
 			int rindex = (int)data.charAt(aulen+1); // range 0-255 encoded in ascii
 			
 			// broadcast
-			Main.Broadcast(rindex, data.substring(aulen+2), token);
+			Server.Broadcast(rindex, data.substring(aulen+2), token);
 		}
 	},
 	RET_STAT(15) {
