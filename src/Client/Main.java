@@ -32,6 +32,8 @@ public class Main {
 			// Send
 			cn.Send("Testing 1 2 3.", 0);
 			print("sent test message");
+			
+			// receive
 			print("\nListening for mesages");
 			while (true) {
 				Thread.sleep(10);

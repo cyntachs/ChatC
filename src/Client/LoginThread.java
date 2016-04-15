@@ -8,7 +8,7 @@ public class LoginThread extends Thread {
 	@Override
 	public void run() {
 		while(true){
-			System.out.println("Running");
+			//System.out.println("Running");
 			if(thisClient.loginPane.getisLogin() == true){
 				thisClient.cl.show(thisClient.panelCont, "2");
 				break;
