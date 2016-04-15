@@ -26,6 +26,11 @@ public class ClientHandler extends Thread {
 	private String Username;
 	private String AuthToken;
 	
+	// idle timer
+	private Timer timer;
+	private static final int IdleTimerLimit = 10; // 10 minutes
+	private int IdleTime;
+	
 	// -------------------- Functions -------------------- //
 	
 	// debug
@@ -50,6 +55,12 @@ public class ClientHandler extends Thread {
 		this.P = new Packet(this.ClientSocket);
 		
 		this.AssignToken();
+		
+		this.IdleTime = 0;
+		timer = new Timer();
+		timer.schedule(new IdleTimer(), 0, 60 * 1000);
+		
+		print("ClienHandler thread initialized");
 	}
 	
 	// access functions
@@ -57,6 +68,28 @@ public class ClientHandler extends Thread {
 	public boolean isConnected() {return isConnected;}
 	public String getToken() {return AuthToken;}
 	public String getUsername() {return Username;}
+	
+	// idle timer
+	protected void ResetIdle() {
+		IdleTime = 0;
+	}
+	
+	protected void CheckIdle() {
+		print("Idle time: "+IdleTime+" minutes.");
+		if (IdleTime >= IdleTimerLimit) {
+			print("Client been idle for too long! Closing connection.");
+			// close connection && terminate thread
+			SendTerminate();
+			Stop();
+		}
+	}
+	
+	class IdleTimer extends TimerTask {
+		public void run() {
+			IdleTime++;
+			CheckIdle();
+		}
+	}
 	
 	// send message to client
 	protected void Send(String data) { 
@@ -138,7 +171,7 @@ public class ClientHandler extends Thread {
 				return;
 			}
 		}
-		
+		ResetIdle();
 		// check data
 		if (data.GetError() != null){
 			print(data.GetError());
@@ -174,7 +207,32 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-	public void Stop(){ReqTerminate = true;}
+	public void Stop(){
+		// Stop handling messages
+		ReqTerminate = true;
+	}
+	
+	protected void SendTerminate() {
+		// send a terminate connection to client
+		SendCommand(9,"");
+		print("Sent TERM_CON to client");
+		// wait before closing socket
+		try {
+			this.wait(100);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	protected void CloseSocket() {
+		// close the socket
+		try {
+			ClientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		print("Socket Closed!");
+	}
 	
 	// Main Routine
 	public void run() {
@@ -189,25 +247,12 @@ public class ClientHandler extends Thread {
 			}
 			MessageHandler();
 		}
+		CloseSocket();
 	}
 	
 	// term handler
 	protected void finalize() {
 		if (DEBUG)
 			print("Thread closing");
-		// send a terminate connection to client
-		SendCommand(9,"");
-		// wait before closing socket
-		try {
-			this.wait(100);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		// close the socket
-		try {
-			ClientSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

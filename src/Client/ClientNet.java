@@ -40,6 +40,9 @@ public class ClientNet {
 		public boolean Check() {
 			return (ServerHandler.getAuthStatus() == 2)? true:false;
 		}
+		public boolean isDeclined() {
+			return (ServerHandler.getAuthStatus() == -1)? true:false;
+		}
 	}
 	
 	public AuthPoll Connect(String uname, String passwd) {
@@ -58,12 +61,12 @@ public class ClientNet {
 		ServerHandler.start();
 		
 		// Hash password
-		try {
+		/*try {
 			MessageDigest Hash = MessageDigest.getInstance("SHA-256");
 			Hash.update(passwd.getBytes("UTF-8"));
 			passwd = String.format("%064x", new java.math.BigInteger(1, Hash.digest()));
 		} catch (NoSuchAlgorithmException e) {e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {e.printStackTrace();}
+		} catch (UnsupportedEncodingException e) {e.printStackTrace();}*/
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
@@ -99,5 +102,11 @@ public class ClientNet {
 	
 	public void LeaveChatRoom(int index) {
 		
+	}
+	
+	// Close connection
+	public void CloseConnection() {
+		ServerHandler.SendTerminate();
+		ServerHandler.Stop();
 	}
 }

@@ -118,33 +118,52 @@ public class ServerHandler extends Thread {
 		Command.get(data.Command()).run(new Object[]{this,data});
 	}
 	
-	public void Stop() {ReqTerminate = true;}
+	public void Stop(){
+		// Stop handling messages
+		ReqTerminate = true;
+	}
+	
+	protected void SendTerminate() {
+		// send a terminate connection to client
+		SendCommand(9,"");
+		print("Sent TERM_CON to client");
+		// wait before closing socket
+		try {
+			this.wait(100);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	protected void CloseSocket() {
+		// close the socket
+		try {
+			ClientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		print("Socket Closed!");
+	}
 	
 	// main routine
 	public void run() {
-		// listen for communications
-		while (!ReqTerminate){
+		print("Server handler thread running.");
+		while (!ReqTerminate) {
+			// debug
+			synchronized(ClientSocket) {
+				if (ClientSocket.isClosed()) {
+					print("Socket closed");
+					return;
+				}
+			}
 			MessageHandler();
 		}
+		CloseSocket();
 	}
 	
 	// term handler
 	protected void finalize() {
 		if (DEBUG)
 			print("Thread closing");
-		// send terminate connection to server
-		SendCommand(9,"");
-		//wait before closing socket
-		try {
-			this.wait(100);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		// close socket
-		try {
-			ClientSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

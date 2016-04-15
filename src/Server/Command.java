@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.IOException;
+
 import Global.Packet;
 import Global.Packet.PacketData;
 
@@ -88,6 +90,9 @@ public enum Command {
 	TERM_CON(9) {
 		public void run(Object[] args) {
 			// handle client request to terminate connection
+			ClientHandler client = ((ClientHandler) args[0]);
+			// close the socket
+			client.Stop();
 		}
 	},
 	DATA(14) {

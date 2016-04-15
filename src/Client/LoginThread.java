@@ -12,6 +12,9 @@ public class LoginThread extends Thread {
 	public void run() {
 		while(true){ 
 			//System.out.println("Running");
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e1) {e1.printStackTrace();}
 			if(thisClient.loginPane.LoginisClick){
 				System.out.println("Button is Clicked");
 				thisClient.loginPane.LoginisClick = false;
