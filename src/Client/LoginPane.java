@@ -151,17 +151,22 @@ public class LoginPane extends javax.swing.JPanel {
     	sb.append("a83920d1348eee579e4d5e2037b93657".toCharArray()); //add salt to stringbuilder
     	sb.append(Password_textfield.getPassword()); //add password to stringbuilder
     	byte[] hash = digest.digest(new String(sb).getBytes("UTF-8"));
-    	if(true){ //send to server 
-    		isLogin = true;
-    	}
+    	Username = Username_Textfield.getText();
+    	HashPassword = String.format("%064x", new java.math.BigInteger(1,hash));
+    	LoginisClick = true;
+//    	if(true){ //send to server 
+//    		isLogin = true;
+//    	}
         //StringBuffer Buff_Password = new StringBuffer(new String(Str_Password)); //Turn password into string buffer
     }                                            
 
-    boolean getisLogin(){
-    	return isLogin;
-    }
+//    boolean getisLogin(){
+//    	return isLogin;
+//    }
 
     // Variables declaration - do not modify
+    protected String Username;
+    protected String HashPassword;
     private ClientNet clientnet;
     private javax.swing.JButton Login_Button;
     private javax.swing.JLabel Password_Label;
@@ -170,6 +175,6 @@ public class LoginPane extends javax.swing.JPanel {
     private javax.swing.JLabel Username_Label;
     private javax.swing.JTextField Username_Textfield;
     private javax.swing.JPanel jPanel1;
-    private boolean isLogin = false;
+    protected boolean LoginisClick = false;
     // End of variables declaration                   
 }
