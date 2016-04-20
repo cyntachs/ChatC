@@ -38,35 +38,36 @@ public class ClientNet {
 	
 	public class AuthPoll {
 		public boolean Check() {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
 			return (ServerHandler.getAuthStatus() == 2)? true:false;
 		}
 		public boolean isDeclined() {
-			return (ServerHandler.getAuthStatus() == -1)? true:false;
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+			return !ServerHandler.isAlive();
 		}
 	}
 	
 	public AuthPoll Connect(String uname, String passwd) {
-		// connect to server
-		try {
-			ClientSocket = new Socket(ServerAddress,ServerPort);
-			ClientSocket.setKeepAlive(true);
-			print("client connecting to server");
-		} catch (UnknownHostException e) {
-			print("Unknown host");
-		} catch (IOException e) {
-			e.printStackTrace();
+		// connect to server if not yet connected
+		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
+				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
+			try {
+				ClientSocket = new Socket(ServerAddress,ServerPort);
+				ClientSocket.setKeepAlive(true);
+				print("client connecting to server");
+			} catch (UnknownHostException e) {
+				print("Unknown host");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			print("Client connected");
+			ServerHandler = new ServerHandler(ClientSocket,DEBUG);
+			ServerHandler.start();
 		}
-		print("Client connected");
-		ServerHandler = new ServerHandler(ClientSocket,DEBUG);
-		ServerHandler.start();
-		
-		// Hash password
-		/*try {
-			MessageDigest Hash = MessageDigest.getInstance("SHA-256");
-			Hash.update(passwd.getBytes("UTF-8"));
-			passwd = String.format("%064x", new java.math.BigInteger(1, Hash.digest()));
-		} catch (NoSuchAlgorithmException e) {e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {e.printStackTrace();}*/
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
@@ -79,6 +80,9 @@ public class ClientNet {
 	}
 	
 	public boolean Ready() {
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {e.printStackTrace();}
 		return ServerHandler.readReady();
 	}
 	
@@ -86,7 +90,7 @@ public class ClientNet {
 		if (Ready())
 			return ServerHandler.getData();
 		else
-			return "";
+			return null;
 	}
 	
 	// Server commands
@@ -97,11 +101,11 @@ public class ClientNet {
 	}
 	
 	public void JoinChatRoom(int index) {
-		
+		ServerHandler.SendCommand(18, "Join:"+index);
 	}
 	
 	public void LeaveChatRoom(int index) {
-		
+		ServerHandler.SendCommand(18, "Leave:"+index);
 	}
 	
 	// Close connection

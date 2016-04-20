@@ -129,7 +129,7 @@ public class Server {
 		print("Server initialized");
 		
 		// debug init
-		CreateRoom("Debug Room","8084");
+		CreateRoom("Debug Room","DEBUGAUTHTOKEN");
 		
 		// start server routine
 		print("Server routine start");

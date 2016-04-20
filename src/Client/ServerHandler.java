@@ -53,12 +53,19 @@ public class ServerHandler extends Thread {
 	
 	// authenticate user
 	public void Authenticate(String uname, String passwd) {
-		String logindata = uname +"."+ passwd;
+		if (AuthStatus ==  2) return;
+		String logindata = uname +":"+ passwd;
 		// send login data
 		synchronized(ClientSocket) {
 			P.writePacket(0,2,logindata.length(),false,1,logindata);
 		}
 		AuthStatus = 1;
+	}
+	
+	public void DeAuthenticate() {
+		if (AuthStatus != 2) return;
+		
+		AuthStatus = 0;
 	}
 	
 	// send to server

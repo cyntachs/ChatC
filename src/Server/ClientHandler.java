@@ -23,6 +23,7 @@ public class ClientHandler extends Thread {
 	private boolean isConnected;
 	
 	// User info
+	protected boolean isAuthenticated;
 	private String Username;
 	private String AuthToken;
 	
@@ -47,6 +48,7 @@ public class ClientHandler extends Thread {
 		this.isConnected = false;
 		this.ThreadID = id;
 		
+		this.isAuthenticated = false;
 		this.Username = "";
 		this.AuthToken = "";
 		
@@ -149,6 +151,10 @@ public class ClientHandler extends Thread {
 	// Error
 	protected void Error_InvalidAuthToken(String err) {
 		print("Client sent invalid Authentication Token! "+err);
+	}
+	
+	protected void Error_UnauthorizedClientExec() {
+		print("Unauthorized client is trying to perform actions");
 	}
 	
 	// Message Handler

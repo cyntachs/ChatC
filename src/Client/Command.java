@@ -23,6 +23,7 @@ public enum Command {
 		public void run(Object[] args) {
 			// handler server decline connection
 			((ServerHandler) args[0]).AuthStatus = -1;
+			((ServerHandler) args[0]).Stop();
 		}
 	},
 	ACC_CON(4) {
