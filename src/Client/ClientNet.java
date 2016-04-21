@@ -101,11 +101,11 @@ public class ClientNet {
 	}
 	
 	public void JoinChatRoom(int index) {
-		ServerHandler.SendCommand(18, "Join:"+index);
+		ServerHandler.SendCommand(18, "JOIN:"+index);
 	}
 	
 	public void LeaveChatRoom(int index) {
-		ServerHandler.SendCommand(18, "Leave:"+index);
+		ServerHandler.SendCommand(18, "LEAVE:"+index);
 	}
 	
 	// Close connection
