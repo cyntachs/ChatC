@@ -24,7 +24,7 @@ public enum Command {
 			ClientHandler client = (ClientHandler) args[0];
 			
 			// check if client is authenticated
-			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec();
+			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec("Client requested for status");
 			
 			// check packet headers for security
 			if ((pdata.DataType() != 0) && (pdata.Command() != 1)) {
@@ -80,11 +80,9 @@ public enum Command {
 			// else send DEC_CON & terminate thread
 			if (found) {
 				client.SendCommand(4,token);
-				client.isAuthenticated = true;
 			} else {
 				client.SendCommand(3,"");
-				client.isAuthenticated = false;
-				client.Stop();
+				client.Terminate();
 			}
 			//Server.AddMember(0, token); // debug add to chatroom 0 
 		}
@@ -96,8 +94,31 @@ public enum Command {
 		}
 	},
 	ACK(6) {
-		public void run(Object[] args) {
+		public void run(Object[] args) { // handle ack packets
+			ClientHandler client = ((ClientHandler) args[0]);
+			String data = ((PacketData) args[1]).Data();
+			String token = client.getToken();
 			
+			// extract AuthToken
+			int aulen = (int)data.charAt(0);
+			String autoken = data.substring(1, aulen+1);
+			
+			// check authtoken
+			if (!autoken.equals(token)) {
+				client.Error_InvalidAuthToken(autoken+" != "+token);
+				return;
+			}
+			
+			switch(data.substring(aulen+1)) {
+			case "ACK_AUTH": {
+				// we now recognize that client is authenticated
+				client.isAuthenticated = true;
+				break;
+			}
+			default: {
+				break;
+			}
+			}
 		}
 	},
 	TERM_CON(9) {
@@ -105,7 +126,34 @@ public enum Command {
 			// handle client request to terminate connection
 			ClientHandler client = ((ClientHandler) args[0]);
 			// close the socket
-			client.Stop();
+			client.Terminate();
+		}
+	},
+	UPD_PKT(10) {
+		public void run(Object[] args) { // handle update request
+			ClientHandler client = ((ClientHandler) args[0]);
+			String data = ((PacketData) args[1]).Data();
+			String token = client.getToken();
+			
+			// check if client is authenticated
+			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec("Unauthorized client ask for update");
+			
+			// extract AuthToken
+			int aulen = (int)data.charAt(0);
+			String autoken = data.substring(1, aulen+1);
+			
+			// check authtoken
+			if (!autoken.equals(token)) {
+				client.Error_InvalidAuthToken(autoken+" != "+token);
+				return;
+			}
+			
+			// check requested update
+		}
+	},
+	SGN_UP(11) {
+		public void run(Object[] args) {
+			
 		}
 	},
 	DATA(14) {
@@ -115,7 +163,7 @@ public enum Command {
 			String token = client.getToken();
 			
 			// check if client is authenticated
-			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec();
+			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec("Data from unauthorized client");
 			
 			// extract AuthToken
 			int aulen = (int)data.charAt(0);
@@ -147,7 +195,7 @@ public enum Command {
 			String token = client.getToken();
 			
 			// check if client is authenticated
-			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec();
+			if (!client.isAuthenticated) client.Error_UnauthorizedClientExec("Client sent room command");
 			
 			// extract AuthToken
 			int aulen = (int)data.charAt(0);

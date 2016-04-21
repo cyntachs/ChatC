@@ -125,7 +125,7 @@ public class ServerHandler extends Thread {
 		Command.get(data.Command()).run(new Object[]{this,data});
 	}
 	
-	public void Stop(){
+	public void Terminate(){
 		// Stop handling messages
 		ReqTerminate = true;
 	}
@@ -166,6 +166,7 @@ public class ServerHandler extends Thread {
 			MessageHandler();
 		}
 		CloseSocket();
+		print("ServerHandler Thread Ended");
 	}
 	
 	// term handler

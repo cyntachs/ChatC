@@ -108,6 +108,8 @@ public class Server {
 		NextClientID = 0;
 		NextRoomIndex = 0;
 		
+		Runtime.getRuntime().addShutdownHook(new onTerminate());
+		
 		// init client handler thread vector
 		ClientHandlerThreads = new Vector<ClientHandler>();
 		
@@ -172,4 +174,40 @@ public class Server {
 			}
 		}
 	}
+	
+	static class onTerminate extends Thread {
+		public void run() {
+			print("Server terminating...");
+			Term = true;
+			// Stop all threads and disconnect
+			synchronized(ClientHandlerThreads) {
+				for (ClientHandler c : ClientHandlerThreads) {
+					c.SendTerminate();
+					c.Terminate();
+					while (c.isAlive()) {
+						try {
+							Thread.sleep(1);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			// wait
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// Close ServerSocket
+			try {
+				ServerSocket.close();
+			} catch (IOException e) {
+				print("Can't close ServerSocket!");
+				e.printStackTrace();
+			}
+			print("Done");
+		}
+	}
+	
 }

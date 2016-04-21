@@ -111,6 +111,6 @@ public class ClientNet {
 	// Close connection
 	public void CloseConnection() {
 		ServerHandler.SendTerminate();
-		ServerHandler.Stop();
+		ServerHandler.Terminate();
 	}
 }
