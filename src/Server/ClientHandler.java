@@ -23,6 +23,7 @@ public class ClientHandler extends Thread {
 	private boolean isConnected;
 	
 	// User info
+	protected boolean isAuthenticated;
 	private String Username;
 	private String AuthToken;
 	
@@ -47,6 +48,7 @@ public class ClientHandler extends Thread {
 		this.isConnected = false;
 		this.ThreadID = id;
 		
+		this.isAuthenticated = false;
 		this.Username = "";
 		this.AuthToken = "";
 		
@@ -80,7 +82,7 @@ public class ClientHandler extends Thread {
 			print("Client been idle for too long! Closing connection.");
 			// close connection && terminate thread
 			SendTerminate();
-			Stop();
+			Terminate();
 		}
 	}
 	
@@ -148,7 +150,13 @@ public class ClientHandler extends Thread {
 	
 	// Error
 	protected void Error_InvalidAuthToken(String err) {
-		print("Client sent invalid Authentication Token! "+err);
+		print("Client sent invalid Authentication Token! \n"+err);
+		SendTerminate();
+		Terminate();
+	}
+	
+	protected void Error_UnauthorizedClientExec(String err) {
+		print("Unauthorized client is trying to perform actions! \n"+err);
 	}
 	
 	// Message Handler
@@ -207,7 +215,7 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
-	public void Stop(){
+	public void Terminate(){
 		// Stop handling messages
 		ReqTerminate = true;
 	}
@@ -218,7 +226,7 @@ public class ClientHandler extends Thread {
 		print("Sent TERM_CON to client");
 		// wait before closing socket
 		try {
-			this.wait(100);
+			Thread.sleep(100);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
@@ -248,6 +256,7 @@ public class ClientHandler extends Thread {
 			MessageHandler();
 		}
 		CloseSocket();
+		print("ClientHandler Thread Ended");
 	}
 	
 	// term handler

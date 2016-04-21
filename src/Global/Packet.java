@@ -111,8 +111,8 @@ public class Packet {
 			}
 		} catch (IOException e) {e.printStackTrace();}
 		// check if header is not malformed
-		if (raw.length() < 5) return new PacketData("Malformed Header");
-		// check is size parameter is correct
+		if (raw.length() < 5) return new PacketData("Malformed Packet");
+		// check if size parameter is correct
 		if (((int)raw.charAt(2)) != raw.substring(5).length())
 			return new PacketData("Incorrect Data Size");
 		// extract data

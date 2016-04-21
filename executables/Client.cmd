@@ -1,2 +1,2 @@
 @echo off
-start javaw -jar ChatC.jar
+start java -jar ChatC.jar

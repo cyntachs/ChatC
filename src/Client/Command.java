@@ -23,6 +23,7 @@ public enum Command {
 		public void run(Object[] args) {
 			// handler server decline connection
 			((ServerHandler) args[0]).AuthStatus = -1;
+			((ServerHandler) args[0]).Terminate();
 		}
 	},
 	ACC_CON(4) {
@@ -33,6 +34,10 @@ public enum Command {
 			
 			((ServerHandler) args[0]).AuthToken = data;
 			((ServerHandler) args[0]).AuthStatus = 2;
+			
+			// send ack to server
+			String autoken = ((char)data.length())+data;
+			((ServerHandler) args[0]).SendCommand(6, autoken+"ACK_AUTH");
 		}
 	},
 	ERR_CON(5) {
@@ -48,6 +53,8 @@ public enum Command {
 	TERM_CON(9) {
 		public void run(Object[] args) {
 			// handle server request to terminate connection
+			ServerHandler client = (ServerHandler) args[0];
+			client.Terminate();
 		}
 	},
 	DATA(14) {
