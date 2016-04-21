@@ -215,12 +215,18 @@ public enum Command {
 			
 			// execute command
 			switch(cmdpart){
-			case "Join": {
+			case "JOIN": {
 				Server.AddMember((int)cmdparam, token);
 				break;
 			}
-			case "leave": {
+			case "LEAVE": {
 				Server.RemoveMember((int)cmdparam, token);
+				break;
+			}
+			case "NEW_ROOM": {
+				break;
+			}
+			case "REM_ROOM": {
 				break;
 			}
 			default: {
