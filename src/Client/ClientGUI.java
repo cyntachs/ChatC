@@ -139,7 +139,7 @@ public class ClientGUI{
 			ListModel dlm = Room_Jlist.getModel();
 			Object item = dlm.getElementAt(index);;
 			Room_Jlist.ensureIndexIsVisible(index);
-			Tab.addTab(""+item, new ChatTabPane(clientnet,""+item));
+			Tab.addTab(""+item, new ChatTabPane(clientnet,getRoomIDbyName(""+item)));
 			clientnet.JoinChatRoom(getRoomIDbyName(item.toString())); //send to server that the user has join the room name
 		}
 	}  

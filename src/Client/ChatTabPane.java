@@ -30,9 +30,9 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 	/**
 	 * Creates new form NewJPanel
 	 */
-	public ChatTabPane(ClientNet x, String roomName) {
+	public ChatTabPane(ClientNet x, int roomID) {
 		clientnet = x;
-		//chatRoomid = clientnet.GetID(roomName);
+		chatRoomid = roomID;
 		initComponents();
 	}
 
@@ -267,14 +267,15 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 			//            if(isConnected()){
 			//                Client.send(message_jEditorPane.text);
 			//            }
-			//System.out.println(message_jEditorPane.getText());
-
-			addStringtoChat(Message_EditorPane.getText());
+			//System.out.println(Message_EditorPane.getText());
+			
+			//addStringtoChat(Message_EditorPane.getText());
 			evt.consume();
 			Message_EditorPane.setText("");
-			/*
-			 * clientnet.Send(Message_EditorPane.getText(),chatroomid)
-			 */
+			
+			//clientnet.Send(Message_EditorPane.getText(),chatRoomid);
+			clientnet.Send("hi",chatRoomid);
+			
 			resetToggleButton();
 		}
 	}                                             

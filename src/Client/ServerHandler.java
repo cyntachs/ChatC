@@ -72,6 +72,7 @@ public class ServerHandler extends Thread {
 	public void Send(String d, int rindex) {
 		if (AuthStatus != 2) return;
 		String dataf = ((char)AuthToken.length()) + AuthToken + ((char) rindex) + d;
+		print(dataf);
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, dataf.length(), false, 1, dataf);
 		}
@@ -133,7 +134,7 @@ public class ServerHandler extends Thread {
 	protected void SendTerminate() {
 		// send a terminate connection to client
 		SendCommand(9,"");
-		print("Sent TERM_CON to client");
+		print("Sent TERM_CON to server");
 		// wait before closing socket
 		try {
 			this.wait(100);

@@ -36,8 +36,8 @@ public enum Command {
 			((ServerHandler) args[0]).AuthStatus = 2;
 			
 			// send ack to server
-			String autoken = ((char)data.length())+data;
-			((ServerHandler) args[0]).SendCommand(6, autoken+"ACK_AUTH");
+			//String autoken = ((char)data.length())+data;
+			((ServerHandler) args[0]).SendCommand(6, "ACK_AUTH");
 		}
 	},
 	ERR_CON(5) {
