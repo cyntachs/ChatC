@@ -41,7 +41,7 @@ public class ClientGUI{
 		//getServerRoom = clientnet.GetChatRooms();//get open room from the server
 		getServerRoom = new HashMap<Integer, String>();
 		getServerRoom.put(0, "Room 1");
-		String[] openRoom = new String[getServerRoom.size()];
+		final String[] openRoom = new String[getServerRoom.size()];
 		int counter = 0;
 		for(int key: getServerRoom.keySet()){
 			openRoom[counter] = getServerRoom.get(key); 
@@ -111,7 +111,7 @@ public class ClientGUI{
 		cl.show(panelCont, "1");
 
 		frame.add(panelCont);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
@@ -139,7 +139,7 @@ public class ClientGUI{
 			ListModel dlm = Room_Jlist.getModel();
 			Object item = dlm.getElementAt(index);;
 			Room_Jlist.ensureIndexIsVisible(index);
-			Tab.addTab(""+item, new ChatTabPane(clientnet,""+item));
+			Tab.addTab(""+item, new ChatTabPane(clientnet,getRoomIDbyName(""+item)));
 			clientnet.JoinChatRoom(getRoomIDbyName(item.toString())); //send to server that the user has join the room name
 		}
 	}  
