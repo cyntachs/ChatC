@@ -273,8 +273,7 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 			evt.consume();
 			Message_EditorPane.setText("");
 			
-			//clientnet.Send(Message_EditorPane.getText(),chatRoomid);
-			clientnet.Send("hi",chatRoomid);
+			clientnet.Send(Message_EditorPane.getText(),chatRoomid);
 			
 			resetToggleButton();
 		}

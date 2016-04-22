@@ -82,6 +82,10 @@ public class Server {
 	// TODO handle html formatted text
 	public synchronized static void Broadcast(int index, String msg, String from) { // from is an AuthToken
 		print("[Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
+		if (!ChatRooms_Members.containsKey(index)) {
+			print("[Broadcast] No room with index "+index);
+			return;
+		}
 		for (ClientHandler c : ClientHandlerThreads) {
 			if (ChatRooms_Members.get(index).contains(c.getToken())) {
 				if (c.getToken() == from) continue;
@@ -95,6 +99,10 @@ public class Server {
 	// TODO handle html formatted text
 	public synchronized static void GlobalBroadcast(int index, String msg, String from) { // from is an AuthToken
 		print("[Global Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
+		if (!ChatRooms_Members.containsKey(index)) {
+			print("[Broadcast] No room with index "+index);
+			return;
+		}
 		for (ClientHandler c : ClientHandlerThreads) {
 			String uname = GetUsername(from);
 			c.Send(msg);

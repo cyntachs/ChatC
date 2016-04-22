@@ -76,6 +76,8 @@ public class ClientNet {
 	
 	// communication
 	public void Send(String data, int rindex) {
+		// remove trailing spaces and newlines
+		data = data.trim().replaceAll("\r?\n", "");
 		ServerHandler.Send(data, rindex);
 	}
 	
