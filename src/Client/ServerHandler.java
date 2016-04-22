@@ -168,6 +168,7 @@ public class ServerHandler extends Thread {
 		}
 		CloseSocket();
 		print("ServerHandler Thread Ended");
+		return;
 	}
 	
 	// term handler

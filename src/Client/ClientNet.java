@@ -36,6 +36,12 @@ public class ClientNet {
 		ServerAddress = addr;
 	}
 	
+	public void ChangeAddress(InetAddress addr) {
+		if (!ClientSocket.isConnected() || ClientSocket.isClosed()) {
+			ServerAddress = addr;
+		}
+	}
+	
 	public class AuthPoll {
 		public boolean Check() {
 			try {

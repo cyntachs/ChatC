@@ -257,6 +257,7 @@ public class ClientHandler extends Thread {
 		}
 		CloseSocket();
 		print("ClientHandler Thread Ended");
+		return;
 	}
 	
 	// term handler
