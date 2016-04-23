@@ -30,9 +30,9 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 	/**
 	 * Creates new form NewJPanel
 	 */
-	public ChatTabPane(ClientNet x, int roomID) {
+	public ChatTabPane(ClientNet x, int roomid) {
 		clientnet = x;
-		chatRoomid = roomID;
+		chatRoomid = roomid;
 		initComponents();
 	}
 
@@ -382,7 +382,7 @@ public class ChatTabPane extends JPanel implements ActionListener, MouseListener
 	private JPanel JPanel2;
 	private JPanel JPanel3;
 	private ClientNet clientnet;
-	private int chatRoomid;
+	protected int chatRoomid;
 	// End of variables declaration                   
 
 }
