@@ -115,7 +115,7 @@ public class ClientGUI{
 		frame.pack();
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
-				//User has exited server
+//				clientnet.CloseConnection();
 			}
 		});
 		frame.setSize(800,600);
@@ -131,7 +131,7 @@ public class ClientGUI{
 		}
 	}
 
-	private void Room_JlistMouseClicked(java.awt.event.MouseEvent evt) {                                        
+	private void Room_JlistMouseClicked(java.awt.event.MouseEvent evt) {    // created room                                     
 		// Open a new tab
 		if(evt.getClickCount() == 2){
 			int index = Room_Jlist.locationToIndex(evt.getPoint());
@@ -139,14 +139,24 @@ public class ClientGUI{
 			ListModel dlm = Room_Jlist.getModel();
 			Object item = dlm.getElementAt(index);;
 			Room_Jlist.ensureIndexIsVisible(index);
+			System.out.println(getRoomIDbyName(""+item));
 			Tab.addTab(""+item, new ChatTabPane(clientnet,getRoomIDbyName(""+item)));
-			clientnet.JoinChatRoom(getRoomIDbyName(item.toString())); //send to server that the user has join the room name
+			clientnet.JoinChatRoom(getRoomIDbyName(""+item)); //send to server that the user has join the room name
+			/*
+			 * create thread and listen to port
+			 */
 		}
 	}  
 	public int getRoomIDbyName(String str){
 		if(getServerRoom.containsValue(str)){
 			for(int key:getServerRoom.keySet()){
-				if(getServerRoom.get(key) == str){
+				
+				
+//				System.out.println(getServerRoom.get(key) + " " + str + " " + key);
+				
+				
+				if(getServerRoom.get(key).equals(str)){
+					
 					return key;
 				}
 			}
@@ -154,7 +164,7 @@ public class ClientGUI{
 		return -1;
 	}
 	/**
-	 * @param args the command line arguments
+	 * @param args the command lin e arguments
 	 * @throws UnknownHostException 
 	 */
 	public static void main(String args[]) throws UnknownHostException {
