@@ -20,16 +20,13 @@ public enum Command {
 		}
 	},
 	DEC_CON(3) {
-		public void run(Object[] args) {
-			// handler server decline connection
+		public void run(Object[] args) { // handler server decline connection
 			((ServerHandler) args[0]).AuthStatus = -1;
 			((ServerHandler) args[0]).Terminate();
 		}
 	},
 	ACC_CON(4) {
-		public void run(Object[] args) {
-			// handle server accept connection
-			// TODO extract AuthToken
+		public void run(Object[] args) { // handle server accept connection
 			String data = ((PacketData) args[1]).Data();
 			
 			((ServerHandler) args[0]).AuthToken = data;
@@ -51,25 +48,31 @@ public enum Command {
 		}
 	},
 	TERM_CON(9) {
-		public void run(Object[] args) {
-			// handle server request to terminate connection
+		public void run(Object[] args) { // handle server request to terminate connection
 			ServerHandler client = (ServerHandler) args[0];
 			client.Terminate();
 		}
 	},
 	DATA(14) {
-		public void run(Object[] args) {
-			// handle data received from server
+		public void run(Object[] args) { // handle data received from server
 			ServerHandler client = (ServerHandler) args[0];
 			client.Data = (String) ((PacketData) args[1]).Data();
 		}
 	},
 	RET_STAT(15) {
-		public void run(Object[] args) {
-			// handle received status
+		public void run(Object[] args) { // handle received status
+			ServerHandler client = (ServerHandler) args[0];
 			String data = ((PacketData) args[1]).Data();
+			client.Info.put("RET_STAT", data);
 		}
-	}
+	},
+	RET_RSP(19) {
+		public void run(Object[] args) { // handle receives response from server
+			ServerHandler client = (ServerHandler) args[0];
+			String data = ((PacketData) args[1]).Data();
+			client.Info.put("RET_RSP", data);
+		}
+	},
 	;
 	
 	public abstract void run(Object[] args);

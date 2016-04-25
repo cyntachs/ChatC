@@ -5,6 +5,7 @@ import Global.Packet.PacketData;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 public class ServerHandler extends Thread {
 	// -------------------- Variables -------------------- //
@@ -23,6 +24,7 @@ public class ServerHandler extends Thread {
 	
 	// Data
 	protected String Data;
+	protected HashMap<String,String> Info;
 	
 	// Authentication
 	protected String AuthToken;
@@ -44,6 +46,8 @@ public class ServerHandler extends Thread {
 		this.AuthStatus = 0;
 		this.ClientSocket = cli;
 		
+		Info = new HashMap<String,String>();
+		
 		P = new Packet(ClientSocket);
 	}
 	
@@ -53,6 +57,11 @@ public class ServerHandler extends Thread {
 	protected String getData() {return Data;}
 	protected int getAuthStatus() {return AuthStatus;}
 	public boolean isKilled() {return Killed;}
+	
+	// Get users
+	public int RequestDone(String req) {
+		return (Info.containsKey(req))? 1:0;
+	}
 	
 	// authenticate user
 	public void Authenticate(String uname, String passwd) {

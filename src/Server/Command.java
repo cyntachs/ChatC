@@ -229,6 +229,11 @@ public enum Command {
 			case "REM_ROOM": {
 				break;
 			}
+			case "GETUSERS": {
+				// TODO get users from requested chatroom
+				client.SendCommand(19, "GETUSERS:");
+				break;
+			}
 			default: {
 				break;
 			}
