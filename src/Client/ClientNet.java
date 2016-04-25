@@ -120,5 +120,7 @@ public class ClientNet {
 	public void CloseConnection() {
 		ServerHandler.SendTerminate();
 		ServerHandler.Terminate();
+		if (ServerHandler.isKilled())
+			ServerHandler = null;
 	}
 }

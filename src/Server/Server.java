@@ -169,7 +169,7 @@ public class Server {
 			// remove dead threads (prevent memory leak)
 			synchronized(ClientHandlerThreads) {
 				for (ClientHandler c : ClientHandlerThreads) {
-					if (!c.isAlive()) {
+					if (c.isKilled()) {
 						// remove from chat rooms
 						for (int key : ChatRooms_Members.keySet()) {
 							RemoveMember(key, c.getToken());

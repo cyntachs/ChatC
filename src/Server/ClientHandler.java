@@ -13,6 +13,7 @@ public class ClientHandler extends Thread {
 	// Thread
 	private boolean DEBUG;
 	private boolean ReqTerminate;
+	private boolean Killed;
 	private int ThreadID;
 	
 	// Packet read/writer
@@ -45,6 +46,7 @@ public class ClientHandler extends Thread {
 	public ClientHandler (int id,Socket Client, boolean dbg) {
 		this.DEBUG = dbg;
 		this.ReqTerminate = false;
+		this.Killed = false;
 		this.isConnected = false;
 		this.ThreadID = id;
 		
@@ -70,6 +72,7 @@ public class ClientHandler extends Thread {
 	public boolean isConnected() {return isConnected;}
 	public String getToken() {return AuthToken;}
 	public String getUsername() {return Username;}
+	public boolean isKilled() {return Killed;}
 	
 	// idle timer
 	protected void ResetIdle() {
@@ -257,6 +260,7 @@ public class ClientHandler extends Thread {
 		}
 		CloseSocket();
 		print("ClientHandler Thread Ended");
+		this.Killed = true;
 		return;
 	}
 	

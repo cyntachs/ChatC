@@ -12,6 +12,7 @@ public class ServerHandler extends Thread {
 	// Vars
 	private boolean DEBUG;
 	private boolean ReqTerminate;
+	private boolean Killed;
 	protected int AuthStatus; // 0 - none, 1 - authenticating, 2 - authenticated, -1 - declined
 	
 	// Socket
@@ -39,6 +40,7 @@ public class ServerHandler extends Thread {
 	ServerHandler(Socket cli, boolean dbg) {
 		this.DEBUG = dbg;
 		this.ReqTerminate = false;
+		this.Killed = false;
 		this.AuthStatus = 0;
 		this.ClientSocket = cli;
 		
@@ -50,6 +52,7 @@ public class ServerHandler extends Thread {
 	protected boolean readReady() {return P.readAvailable();}
 	protected String getData() {return Data;}
 	protected int getAuthStatus() {return AuthStatus;}
+	public boolean isKilled() {return Killed;}
 	
 	// authenticate user
 	public void Authenticate(String uname, String passwd) {
@@ -168,6 +171,7 @@ public class ServerHandler extends Thread {
 		}
 		CloseSocket();
 		print("ServerHandler Thread Ended");
+		this.Killed = true;
 		return;
 	}
 	
