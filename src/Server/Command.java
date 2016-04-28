@@ -44,7 +44,7 @@ public enum Command {
 			switch(data.substring(aulen+1)) {
 			case "GetServerRooms": { // client asks for list of chatrooms
 				// serialize ChatRooms
-				String serval = "GetServerRooms;";
+				String serval = "GetServerRooms:";
 				for (int i = 0; i < Server.ChatRooms.size(); i++) {
 					String element = "" + i + "," + (String) Server.ChatRooms.get(i).get("Room Name") + ";";
 					serval += element;
@@ -62,8 +62,9 @@ public enum Command {
 	REQ_CON(2) {
 		public void run(Object[] args) {
 			// handle client request for connection
-			// TODO authenticate user && send DEC_CON if declined
-			// TODO send ACC_CON w/ AuthToken
+			// TODO 
+			// - authenticate user && send DEC_CON if declined
+			// - send ACC_CON w/ AuthToken
 			ClientHandler client = ((ClientHandler) args[0]);
 			String data = ((PacketData) args[1]).Data();
 			String token = client.getToken();

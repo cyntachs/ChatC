@@ -64,7 +64,10 @@ public class Server {
 	}
 	
 	public synchronized static void DestroyRoom(int index) {
-		// TODO
+		if (ChatRooms.containsKey(index))
+			ChatRooms.remove(index);
+		else
+			return;
 	}
 	
 	public synchronized static void AddMember(int index, String au) {
@@ -72,6 +75,8 @@ public class Server {
 	}
 	
 	public synchronized static void RemoveMember(int index, String au) {
+		if (!ChatRooms_Members.containsKey(index))
+			return;
 		if (ChatRooms_Members.get(index).contains(au)) {
 			int i = ChatRooms_Members.get(index).indexOf(au);
 			ChatRooms_Members.get(index).remove(i);

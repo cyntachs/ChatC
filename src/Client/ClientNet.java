@@ -43,21 +43,6 @@ public class ClientNet {
 		}
 	}
 	
-//	public class AuthPoll {
-//		public boolean Check() {
-//			try {
-//				Thread.sleep(1);
-//			} catch (InterruptedException e) {e.printStackTrace();}
-//			return (ServerHandler.getAuthStatus() == 2)? true:false;
-//		}
-//		public boolean isDeclined() {
-//			try {
-//				Thread.sleep(1);
-//			} catch (InterruptedException e) {e.printStackTrace();}
-//			return !ServerHandler.isAlive();
-//		}
-//	}
-	
 	public class DataPoll {
 		private Callable<Integer> function;
 		private int tval;
@@ -82,29 +67,6 @@ public class ClientNet {
 			return (retval == fval)? true:false;
 		}
 	}
-	
-//	public AuthPoll Connect(String uname, String passwd) {
-//		// connect to server if not yet connected
-//		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
-//				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
-//			try {
-//				ClientSocket = new Socket(ServerAddress,ServerPort);
-//				ClientSocket.setKeepAlive(true);
-//				print("client connecting to server");
-//			} catch (UnknownHostException e) {
-//				print("Unknown host");
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//			print("Client connected");
-//			ServerHandler = new ServerHandler(ClientSocket,DEBUG);
-//			ServerHandler.start();
-//		}
-//		
-//		// authenticate
-//		ServerHandler.Authenticate(uname, passwd);
-//		return new AuthPoll();
-//	}
 	
 	public DataPoll Connect_Polling(String uname, String passwd) {
 		// connect to server if not yet connected
@@ -131,7 +93,7 @@ public class ClientNet {
 		}, 2, -1);
 	}
 	
-	public synchronized int Connect(String uname, String passwd) {
+	public int Connect(String uname, String passwd) {
 		// connect to server if not yet connected
 		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
 				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
@@ -152,11 +114,7 @@ public class ClientNet {
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
 		while (ServerHandler.getAuthStatus() == 1) {
-			try {
-				//wait();
-				Thread.sleep(1);
-			} catch (InterruptedException e) {}
-		}
+			try {Thread.sleep(1);} catch (InterruptedException e) {}}
 		return ServerHandler.getAuthStatus();
 	}
 
@@ -184,9 +142,41 @@ public class ClientNet {
 	
 	// Server commands
 	public HashMap<Integer,String> GetChatRooms() {
-		String autokenhdr = ((char)ServerHandler.AuthToken.length()) + ServerHandler.AuthToken;
-		ServerHandler.SendCommand(1,autokenhdr+"GetServerRooms");
-		// TODO
+		ServerHandler.SendCommand(1,"GetServerRooms");
+		while(!Ready()) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		// check if correct data
+		if (!ServerHandler.Info.containsKey("RET_STAT"))
+			return null;
+		String retstat = ServerHandler.Info.get("RET_STAT");
+		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
+			return null;
+		// unserialize
+		HashMap<Integer,String> rooms = new HashMap<Integer,String>();
+		retstat = retstat.split(":",2)[1];
+		for (String b : retstat.split(";")) {
+			rooms.put(Integer.parseInt(b.split(",",2)[0]), b.split(",",2)[1]);
+		}
+		return rooms;
+	}
+	
+	public Vector<String> GetUsersOnline(int index) {
+		ServerHandler.SendCommand(18, "GETUSERS:"+index);
+		while(!Ready()) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		// check if correct data
+		if (!ServerHandler.Info.containsKey("RET_RSP"))
+			return null;
+		String retstat = ServerHandler.Info.get("RET_RSP");
+		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
+			return null;
+		// unserialize
 		return null;
 	}
 	
@@ -196,13 +186,6 @@ public class ClientNet {
 	
 	public void LeaveChatRoom(int index) {
 		ServerHandler.SendCommand(18, "LEAVE:"+index);
-	}
-	
-	public DataPoll GetUsersOnline(int index) {
-		ServerHandler.SendCommand(18, "GETUSERS:"+index);
-		return new DataPoll(new Callable<Integer>() {
-			public Integer call() {return 1;}
-		}, 1,0);
 	}
 	
 	// Close connection
