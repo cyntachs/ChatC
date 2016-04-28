@@ -5,6 +5,7 @@ import java.net.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public class ClientNet {
 	// debug
@@ -36,22 +37,38 @@ public class ClientNet {
 		ServerAddress = addr;
 	}
 	
-	public class AuthPoll {
-		public boolean Check() {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {e.printStackTrace();}
-			return (ServerHandler.getAuthStatus() == 2)? true:false;
-		}
-		public boolean isDeclined() {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {e.printStackTrace();}
-			return !ServerHandler.isAlive();
+	public void ChangeAddress(InetAddress addr) {
+		if (!ClientSocket.isConnected() || ClientSocket.isClosed()) {
+			ServerAddress = addr;
 		}
 	}
 	
-	public AuthPoll Connect(String uname, String passwd) {
+	public class DataPoll {
+		private Callable<Integer> function;
+		private int tval;
+		private int fval;
+		public DataPoll(Callable<Integer> func, int t, int f) {
+			function = func;
+			tval = t;
+			fval = f;
+		}
+		public boolean Check() {
+			int retval = 0;
+			try {
+				retval = function.call();
+			} catch (Exception e) {e.printStackTrace();}
+			return (retval == tval)? true:false;
+		}
+		public boolean Failed() {
+			int retval = 0;
+			try {
+				retval = function.call();
+			} catch (Exception e) {e.printStackTrace();}
+			return (retval == fval)? true:false;
+		}
+	}
+	
+	public DataPoll Connect_Polling(String uname, String passwd) {
 		// connect to server if not yet connected
 		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
 				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
@@ -71,11 +88,41 @@ public class ClientNet {
 		
 		// authenticate
 		ServerHandler.Authenticate(uname, passwd);
-		return new AuthPoll();
+		return new DataPoll(new Callable<Integer>() {
+			public Integer call() {return ServerHandler.getAuthStatus();}
+		}, 2, -1);
 	}
+	
+	public int Connect(String uname, String passwd) {
+		// connect to server if not yet connected
+		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
+				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
+			try {
+				ClientSocket = new Socket(ServerAddress,ServerPort);
+				ClientSocket.setKeepAlive(true);
+				print("client connecting to server");
+			} catch (UnknownHostException e) {
+				print("Unknown host");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			print("Client connected");
+			ServerHandler = new ServerHandler(ClientSocket,DEBUG);
+			ServerHandler.start();
+		}
+		
+		// authenticate
+		ServerHandler.Authenticate(uname, passwd);
+		while (ServerHandler.getAuthStatus() == 1) {
+			try {Thread.sleep(1);} catch (InterruptedException e) {}}
+		return ServerHandler.getAuthStatus();
+	}
+
 	
 	// communication
 	public void Send(String data, int rindex) {
+		// remove trailing spaces and newlines
+		data = data.trim().replaceAll("\r?\n", "");
 		ServerHandler.Send(data, rindex);
 	}
 	
@@ -95,8 +142,41 @@ public class ClientNet {
 	
 	// Server commands
 	public HashMap<Integer,String> GetChatRooms() {
-		String autokenhdr = ((char)ServerHandler.AuthToken.length()) + ServerHandler.AuthToken;
-		ServerHandler.SendCommand(1,autokenhdr+"GetServerRooms");
+		ServerHandler.SendCommand(1,"GetServerRooms");
+		while(!Ready()) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		// check if correct data
+		if (!ServerHandler.Info.containsKey("RET_STAT"))
+			return null;
+		String retstat = ServerHandler.Info.get("RET_STAT");
+		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
+			return null;
+		// unserialize
+		HashMap<Integer,String> rooms = new HashMap<Integer,String>();
+		retstat = retstat.split(":",2)[1];
+		for (String b : retstat.split(";")) {
+			rooms.put(Integer.parseInt(b.split(",",2)[0]), b.split(",",2)[1]);
+		}
+		return rooms;
+	}
+	
+	public Vector<String> GetUsersOnline(int index) {
+		ServerHandler.SendCommand(18, "GETUSERS:"+index);
+		while(!Ready()) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		// check if correct data
+		if (!ServerHandler.Info.containsKey("RET_RSP"))
+			return null;
+		String retstat = ServerHandler.Info.get("RET_RSP");
+		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
+			return null;
+		// unserialize
 		return null;
 	}
 	
@@ -112,5 +192,7 @@ public class ClientNet {
 	public void CloseConnection() {
 		ServerHandler.SendTerminate();
 		ServerHandler.Terminate();
+		if (ServerHandler.isKilled())
+			ServerHandler = null;
 	}
 }

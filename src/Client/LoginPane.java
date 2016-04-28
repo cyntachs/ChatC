@@ -158,7 +158,13 @@ public class LoginPane extends javax.swing.JPanel {
 //    		isLogin = true;
 //    	}
         //StringBuffer Buff_Password = new StringBuffer(new String(Str_Password)); //Turn password into string buffer
-    }                                            
+    }                                       
+    protected void SetbuttonFalse(){
+    	Login_Button.setEnabled(false);
+    }
+    protected void SetbuttonTrue(){
+    	Login_Button.setEnabled(true);
+    }
 
 //    boolean getisLogin(){
 //    	return isLogin;

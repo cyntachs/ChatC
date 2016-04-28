@@ -64,7 +64,10 @@ public class Server {
 	}
 	
 	public synchronized static void DestroyRoom(int index) {
-		// TODO
+		if (ChatRooms.containsKey(index))
+			ChatRooms.remove(index);
+		else
+			return;
 	}
 	
 	public synchronized static void AddMember(int index, String au) {
@@ -72,6 +75,8 @@ public class Server {
 	}
 	
 	public synchronized static void RemoveMember(int index, String au) {
+		if (!ChatRooms_Members.containsKey(index))
+			return;
 		if (ChatRooms_Members.get(index).contains(au)) {
 			int i = ChatRooms_Members.get(index).indexOf(au);
 			ChatRooms_Members.get(index).remove(i);
@@ -82,6 +87,10 @@ public class Server {
 	// TODO handle html formatted text
 	public synchronized static void Broadcast(int index, String msg, String from) { // from is an AuthToken
 		print("[Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
+		if (!ChatRooms_Members.containsKey(index)) {
+			print("[Broadcast] No room with index "+index);
+			return;
+		}
 		for (ClientHandler c : ClientHandlerThreads) {
 			if (ChatRooms_Members.get(index).contains(c.getToken())) {
 				if (c.getToken() == from) continue;
@@ -95,6 +104,10 @@ public class Server {
 	// TODO handle html formatted text
 	public synchronized static void GlobalBroadcast(int index, String msg, String from) { // from is an AuthToken
 		print("[Global Broadcast] Room: "+index+"  Message: "+msg+"  From: "+from);
+		if (!ChatRooms_Members.containsKey(index)) {
+			print("[Broadcast] No room with index "+index);
+			return;
+		}
 		for (ClientHandler c : ClientHandlerThreads) {
 			String uname = GetUsername(from);
 			c.Send(msg);
@@ -161,7 +174,7 @@ public class Server {
 			// remove dead threads (prevent memory leak)
 			synchronized(ClientHandlerThreads) {
 				for (ClientHandler c : ClientHandlerThreads) {
-					if (!c.isAlive()) {
+					if (c.isKilled()) {
 						// remove from chat rooms
 						for (int key : ChatRooms_Members.keySet()) {
 							RemoveMember(key, c.getToken());
