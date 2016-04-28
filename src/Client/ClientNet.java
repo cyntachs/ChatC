@@ -106,7 +106,7 @@ public class ClientNet {
 //		return new AuthPoll();
 //	}
 	
-	public DataPoll Connect(String uname, String passwd) {
+	public DataPoll Connect_Polling(String uname, String passwd) {
 		// connect to server if not yet connected
 		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
 				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
@@ -130,6 +130,36 @@ public class ClientNet {
 			public Integer call() {return ServerHandler.getAuthStatus();}
 		}, 2, -1);
 	}
+	
+	public synchronized int Connect(String uname, String passwd) {
+		// connect to server if not yet connected
+		if ( ((ClientSocket == null) || (ClientSocket.isClosed())) && 
+				((ServerHandler == null) || (!ServerHandler.isAlive())) ) {
+			try {
+				ClientSocket = new Socket(ServerAddress,ServerPort);
+				ClientSocket.setKeepAlive(true);
+				print("client connecting to server");
+			} catch (UnknownHostException e) {
+				print("Unknown host");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			print("Client connected");
+			ServerHandler = new ServerHandler(ClientSocket,DEBUG);
+			ServerHandler.start();
+		}
+		
+		// authenticate
+		ServerHandler.Authenticate(uname, passwd);
+		while (ServerHandler.getAuthStatus() == 1) {
+			try {
+				//wait();
+				Thread.sleep(1);
+			} catch (InterruptedException e) {}
+		}
+		return ServerHandler.getAuthStatus();
+	}
+
 	
 	// communication
 	public void Send(String data, int rindex) {

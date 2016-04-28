@@ -85,6 +85,9 @@ public class ClientHandler extends Thread {
 			print("Client been idle for too long! Closing connection.");
 			// close connection && terminate thread
 			SendTerminate();
+			try {
+				Thread.sleep(2);
+			} catch (InterruptedException e) {e.printStackTrace();}
 			Terminate();
 		}
 	}
