@@ -72,9 +72,10 @@ public class Packet {
 		}
 	}
 	
-	public void writePacket(int type, int cmd, int size, boolean isfrag, int fragp,String D) {
+	public void writePacket(int type, int cmd, int size, boolean isfrag, int fragp, String D) {
 		try {
 			// check parameters
+			// limit size to 65025
 			
 			// create packet and send
 			String out = "" + 

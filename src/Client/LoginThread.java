@@ -1,9 +1,9 @@
 package Client;
-import Client.ClientNet.AuthPoll;
+//import Client.ClientNet.AuthPoll;
 public class LoginThread extends Thread {
 	ClientGUI thisClient;
 	ClientNet cn;
-	AuthPoll poll;
+	//AuthPoll poll;
 	public LoginThread(ClientGUI client,ClientNet cnn){
 		thisClient = client;
 		cn = cnn;
@@ -18,17 +18,19 @@ public class LoginThread extends Thread {
 			if(thisClient.loginPane.LoginisClick){
 				System.out.println("Button is Clicked");
 				thisClient.loginPane.LoginisClick = false;
-				poll = cn.Connect(thisClient.loginPane.Username,thisClient.loginPane.HashPassword);
-				System.out.println("Poll created");
-				while(!poll.Check()){
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				System.out.println("Returned true");
+//				poll = cn.Connect_Polling(thisClient.loginPane.Username,thisClient.loginPane.HashPassword);
+//				System.out.println("Poll created");
+//				while(!poll.Check()){
+//					try {
+//						Thread.sleep(1);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+				int con_val = cn.Connect(thisClient.loginPane.Username,thisClient.loginPane.HashPassword);
+				if (con_val == 2)
+					System.out.println("Returned true");
 				//thisClient.cl.show(thisClient.panelCont, "2");
 				thisClient.initRoomPane();
 				return;
