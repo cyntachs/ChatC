@@ -1,0 +1,18 @@
+drop database User;
+
+create database User;
+
+create table userinfo(
+name varchar(20) not null,
+password varchar(40) not null,
+sex varchar(10) default "male",
+age int not null,
+birthday varchar(20) not null,
+email varchar(40) not null
+);
+
+create table usertemp(
+ip varchar(40) not null,
+name varchar(20) not null,
+password varchar(40) not null
+);

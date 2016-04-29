@@ -5,6 +5,7 @@ import Global.Packet.PacketData;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 public class ServerHandler extends Thread {
 	// -------------------- Variables -------------------- //
@@ -12,6 +13,7 @@ public class ServerHandler extends Thread {
 	// Vars
 	private boolean DEBUG;
 	private boolean ReqTerminate;
+	private boolean Killed;
 	protected int AuthStatus; // 0 - none, 1 - authenticating, 2 - authenticated, -1 - declined
 	
 	// Socket
@@ -22,6 +24,7 @@ public class ServerHandler extends Thread {
 	
 	// Data
 	protected String Data;
+	protected HashMap<String,String> Info;
 	
 	// Authentication
 	protected String AuthToken;
@@ -39,8 +42,11 @@ public class ServerHandler extends Thread {
 	ServerHandler(Socket cli, boolean dbg) {
 		this.DEBUG = dbg;
 		this.ReqTerminate = false;
+		this.Killed = false;
 		this.AuthStatus = 0;
 		this.ClientSocket = cli;
+		
+		Info = new HashMap<String,String>();
 		
 		P = new Packet(ClientSocket);
 	}
@@ -50,6 +56,12 @@ public class ServerHandler extends Thread {
 	protected boolean readReady() {return P.readAvailable();}
 	protected String getData() {return Data;}
 	protected int getAuthStatus() {return AuthStatus;}
+	public boolean isKilled() {return Killed;}
+	
+	// Get users
+	public int RequestDone(String req) {
+		return (Info.containsKey(req))? 1:0;
+	}
 	
 	// authenticate user
 	public void Authenticate(String uname, String passwd) {
@@ -72,6 +84,7 @@ public class ServerHandler extends Thread {
 	public void Send(String d, int rindex) {
 		if (AuthStatus != 2) return;
 		String dataf = ((char)AuthToken.length()) + AuthToken + ((char) rindex) + d;
+		print(dataf);
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, dataf.length(), false, 1, dataf);
 		}
@@ -133,7 +146,7 @@ public class ServerHandler extends Thread {
 	protected void SendTerminate() {
 		// send a terminate connection to client
 		SendCommand(9,"");
-		print("Sent TERM_CON to client");
+		print("Sent TERM_CON to server");
 		// wait before closing socket
 		try {
 			this.wait(100);
@@ -167,6 +180,8 @@ public class ServerHandler extends Thread {
 		}
 		CloseSocket();
 		print("ServerHandler Thread Ended");
+		this.Killed = true;
+		return;
 	}
 	
 	// term handler
