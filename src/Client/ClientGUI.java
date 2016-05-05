@@ -38,9 +38,9 @@ public class ClientGUI{
 		
 		HashMap<Integer, String> getSR = clientnet.GetChatRooms();//get open room from the server
 		getServerRoom = new HashMap<Integer, String>();
-		for (HashMap<Integer, String> k : getSR) {
-			
-		}
+		//for (HashMap<Integer, String> k : getSR) {
+		//	
+		//}
 		//getServerRoom.put(0, "Room 1");
 		final String[] openRoom = new String[getServerRoom.size()];
 		int counter = 0;
@@ -101,8 +101,7 @@ public class ClientGUI{
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">                          
 	private void initComponents() throws UnknownHostException {
 		String ipAddress = JOptionPane.showInputDialog(frame, "Enter Server IP:").toString();
-		int portAddress = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Server Port:"));
-		clientnet = new ClientNet(InetAddress.getByName(ipAddress),portAddress);
+		clientnet = new ClientNet(InetAddress.getByName(ipAddress));
 		frame = new JFrame("ChatC"); //Main Frame
 		panelCont = new JPanel(); //control Panel
 		loginPane = new LoginPane(clientnet); //Login Panel	
