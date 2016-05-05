@@ -1,3 +1,3 @@
 cd bin
-java Client/Main
+java -cp ./Client/ClientGui
 pause
