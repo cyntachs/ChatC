@@ -30,10 +30,9 @@ public class ClientNet {
 	}
 	
 	// constructor
-	public ClientNet(InetAddress addr) {
+	public ClientNet(InetAddress addr, int port) {
 		DEBUG = true;
-		
-		ServerPort = 36801;
+		ServerPort = port;
 		ServerAddress = addr;
 	}
 	
