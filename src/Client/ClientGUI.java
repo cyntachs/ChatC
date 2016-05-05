@@ -9,16 +9,14 @@ import java.awt.CardLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
-import javax.swing.SwingWorker;
 
 /**
  *
@@ -38,9 +36,12 @@ public class ClientGUI{
 		Main_ScrollPane = new javax.swing.JScrollPane(); //
 		Room_Jlist = new javax.swing.JList<>();
 		
-		//getServerRoom = clientnet.GetChatRooms();//get open room from the server
+		HashMap<Integer, String> getSR = clientnet.GetChatRooms();//get open room from the server
 		getServerRoom = new HashMap<Integer, String>();
-		getServerRoom.put(0, "Room 1");
+		for (HashMap<Integer, String> k : getSR) {
+			
+		}
+		//getServerRoom.put(0, "Room 1");
 		final String[] openRoom = new String[getServerRoom.size()];
 		int counter = 0;
 		for(int key: getServerRoom.keySet()){
@@ -99,10 +100,12 @@ public class ClientGUI{
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">                          
 	private void initComponents() throws UnknownHostException {
-		clientnet = new ClientNet(InetAddress.getByName("127.0.0.1"));
+		String ipAddress = JOptionPane.showInputDialog(frame, "Enter Server IP:").toString();
+		int portAddress = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Server Port:"));
+		clientnet = new ClientNet(InetAddress.getByName(ipAddress),portAddress);
 		frame = new JFrame("ChatC"); //Main Frame
 		panelCont = new JPanel(); //control Panel
-		loginPane = new LoginPane(clientnet); //Login Panel
+		loginPane = new LoginPane(clientnet); //Login Panel	
 		cl = new CardLayout(); //cardlayout object
 		
 		panelCont.setLayout(cl);
@@ -115,7 +118,7 @@ public class ClientGUI{
 		frame.pack();
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
-//				clientnet.CloseConnection();
+				clientnet.CloseConnection();
 			}
 		});
 		frame.setSize(800,600);
