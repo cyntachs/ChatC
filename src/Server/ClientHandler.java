@@ -223,6 +223,7 @@ public class ClientHandler extends Thread {
 	
 	public void Terminate(){
 		// Stop handling messages
+		timer.cancel();
 		ReqTerminate = true;
 	}
 	

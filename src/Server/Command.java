@@ -75,8 +75,13 @@ public enum Command {
 			String passwd = unpdat[1];
 			
 			// search database
-			boolean found = true;
+			boolean found = false;
+			UserDBConnection dbcon = new UserDBConnection();
+			try {
+				found = dbcon.searchInfo(uname, passwd);
+			} catch (Exception e) {e.printStackTrace();}
 			
+            found = true; // debug till database connection problem is fixed
 			// if auth then send ACC_CON
 			// else send DEC_CON & terminate thread
 			if (found) {

@@ -9,16 +9,16 @@ import java.sql.SQLException;
 public class UserDBConnection {
 
     // define MySQL database driver
-    public static final String DBDRIVER = "org.gjt.mm.mysql.Driver";
+    public static final String DBDRIVER = "com.mysql.jdbc.Driver"; //"org.gjt.mm.mysql.Driver";
 
     // define MySQL database connection URL
-    public static final String DBURL = "jdbc:mysql://localhost:3306/user";
+    public static final String DBURL = "jdbc:mysql://127.0.0.1:3306/User";
 
     // username of MySQL database
     public static final String DBUSER = "root";
 
     // password of MySQL database
-    public static final String DBPASS = "mysqladmin";
+    public static final String DBPASS = "password";
 
     public void insertInfo(String name, String password, String sex, int age, String birthday, String email) throws Exception {
         Connection conn = null;
