@@ -115,11 +115,11 @@ public class ClientGUI{
 		frame.add(panelCont);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e){
-				clientnet.CloseConnection();
-			}
-		});
+//		frame.addWindowListener(new WindowAdapter() {
+//			public void windowClosing(WindowEvent e){
+//				clientnet.CloseConnection();
+//			}
+//		});
 		frame.setSize(800,600);
 		frame.setVisible(true);
 	}// </editor-fold>                        

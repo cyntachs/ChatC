@@ -95,7 +95,7 @@ public class Server {
 			if (ChatRooms_Members.get(index).contains(c.getToken())) {
 				if (c.getToken() == from) continue;
 				String uname = GetUsername(from);
-				c.Send(msg);
+				c.Send(((char)index)+msg);
 			}
 		}
 	}

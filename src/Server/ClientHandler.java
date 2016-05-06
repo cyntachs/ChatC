@@ -18,6 +18,7 @@ public class ClientHandler extends Thread {
 	
 	// Packet read/writer
 	private Packet P;
+	private PacketData LastSent;
 	
 	// Sockets
 	private Socket ClientSocket;
@@ -102,14 +103,14 @@ public class ClientHandler extends Thread {
 	// send message to client
 	protected void Send(String data) { 
 		synchronized(ClientSocket) {
-			P.writePacket(1, 14, data.length(), false, 1, data);
+			LastSent = P.writePacket(1, 14, data.length(), false, 1, data);
 		}
 	}
 	
 	// Send command to client
 	protected void SendCommand(int cmd, String data) {
 		synchronized(ClientSocket) {
-			P.writePacket(0,cmd,data.length(),false,1,data);
+			LastSent = P.writePacket(0,cmd,data.length(),false,1,data);
 		}
 	}
 	
