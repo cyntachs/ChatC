@@ -30,9 +30,9 @@ public class ClientNet {
 	}
 	
 	// constructor
-	public ClientNet(InetAddress addr, int port) {
+	public ClientNet(InetAddress addr) {
 		DEBUG = true;
-		ServerPort = port;
+		ServerPort = 36801;
 		ServerAddress = addr;
 	}
 	
@@ -142,14 +142,12 @@ public class ClientNet {
 	// Server commands
 	public HashMap<Integer,String> GetChatRooms() {
 		ServerHandler.SendCommand(1,"GetServerRooms");
-		while(!Ready()) {
+		while(!ServerHandler.Info.containsKey("RET_STAT")) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		// check if correct data
-		if (!ServerHandler.Info.containsKey("RET_STAT"))
-			return null;
 		String retstat = ServerHandler.Info.get("RET_STAT");
 		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
 			return null;

@@ -1,7 +1,10 @@
+Remove: 
 drop database User;
 
-create database User;
+Create:
 
+create database User;
+use User;
 create table userinfo(
 name varchar(20) not null,
 password varchar(40) not null,

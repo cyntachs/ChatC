@@ -72,7 +72,7 @@ public class Packet {
 		}
 	}
 	
-	public void writePacket(int type, int cmd, int size, boolean isfrag, int fragp, String D) {
+	public PacketData writePacket(int type, int cmd, int size, boolean isfrag, int fragp, String D) {
 		try {
 			// check parameters
 			// limit size to 65025
@@ -99,6 +99,44 @@ public class Packet {
 			System.out.println("[Packet] Could not flush buffer!");
 			e.printStackTrace();
 		}
+		String[] retval = new String[6];
+		retval[0] = ""+ type;
+		retval[1] = ""+ cmd;
+		retval[2] = ""+ size;
+		retval[3] = ""+ isfrag;
+		retval[4] = ""+ fragp;
+		retval[5] = ""+ D;
+		return new PacketData(retval);
+	}
+	
+	public PacketData writePacket(PacketData Data) {
+		try {
+			// check parameters
+			// limit size to 65025
+			
+			// create packet and send
+			String out = "" 
+					+ (char) Data.DataType()
+					+ (char) Data.Command()
+					+ (char) Data.Size()
+					+ (char) ((Data.isFragmented())? 1:0)
+					+ (char) Data.FragmentPart()
+					+ Data.Data();
+			
+			synchronized(Socket){
+			Out.write(out);
+			Out.newLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Out.flush();
+		} catch (IOException e) {
+			System.out.println("[Packet] Could not flush buffer!");
+			e.printStackTrace();
+		}
+		return Data;
 	}
 	
 	public PacketData readPacket() {
