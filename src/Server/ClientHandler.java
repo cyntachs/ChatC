@@ -20,6 +20,10 @@ public class ClientHandler extends Thread {
 	private Packet P;
 	private PacketData LastSent;
 	
+	// transmission
+	private Queue SendQueue;
+	protected boolean AckWaiting;
+	
 	// Sockets
 	private Socket ClientSocket;
 	private boolean isConnected;
@@ -54,6 +58,8 @@ public class ClientHandler extends Thread {
 		this.isAuthenticated = false;
 		this.Username = "";
 		this.AuthToken = "";
+		
+		this.AckWaiting = false;
 		
 		this.ClientSocket = Client;
 		
@@ -101,10 +107,11 @@ public class ClientHandler extends Thread {
 	}
 	
 	// send message to client
-	protected void Send(String data) { 
+	protected void Send(String data) {
 		synchronized(ClientSocket) {
 			LastSent = P.writePacket(1, 14, data.length(), false, 1, data);
 		}
+		print("Sent Packet to client "+ThreadID+": "+data);
 	}
 	
 	// Send command to client
@@ -112,6 +119,7 @@ public class ClientHandler extends Thread {
 		synchronized(ClientSocket) {
 			LastSent = P.writePacket(0,cmd,data.length(),false,1,data);
 		}
+		print("Sent Command to client "+ThreadID+": ("+cmd+") "+data);
 	}
 	
 	// convert long int to base64
@@ -153,6 +161,7 @@ public class ClientHandler extends Thread {
 		while (Server.CheckAuthTokenUsed(token))
 			token = GenerateAuthToken();
 		AuthToken = token;
+		print("AuthToken for client "+ThreadID+" generated and assigned!");
 	}
 	
 	// Error
@@ -170,12 +179,24 @@ public class ClientHandler extends Thread {
 		
 	}
 	
+	// Send packets
+	private void SendPackets () {
+		if (!AckWaiting) {
+			// Send next packet in queue
+			
+		} else {
+			// Waiting for an ack reply
+			
+		}
+	}
+	
 	// Message Handler
 	private void MessageHandler() {
 		PacketData data = null;
 		synchronized(ClientSocket) {
 			if (!ClientSocket.isConnected()){
 				print("Socket unexpectedly closed!");
+				Terminate();
 				return;
 			}
 			if (!P.readAvailable()) return;
@@ -228,10 +249,13 @@ public class ClientHandler extends Thread {
 		}
 	}
 	
+	// Terminate
+	
 	public void Terminate(){
 		// Stop handling messages
 		timer.cancel();
 		ReqTerminate = true;
+		print("Client "+ThreadID+" terminating...");
 	}
 	
 	protected void SendTerminate() {
@@ -267,6 +291,7 @@ public class ClientHandler extends Thread {
 					return;
 				}
 			}
+			SendPackets();
 			MessageHandler();
 		}
 		CloseSocket();

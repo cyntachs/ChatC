@@ -148,8 +148,6 @@ public class ClientNet {
 			} catch (InterruptedException e) {e.printStackTrace();}
 		}
 		// check if correct data
-//		if (!ServerHandler.Info.containsKey("RET_STAT"))
-//			return null;
 		String retstat = ServerHandler.Info.get("RET_STAT");
 		if (!retstat.split(":",2)[0].equals("GetServerRooms"))
 			return null;

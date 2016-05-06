@@ -121,6 +121,10 @@ public enum Command {
 				client.isAuthenticated = true;
 				break;
 			}
+			case "ACK_RCV": {
+				// client confirms message received
+				client.AckWaiting = false;
+			}
 			default: {
 				break;
 			}
