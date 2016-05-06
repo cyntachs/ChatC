@@ -29,10 +29,16 @@ public class LoginThread extends Thread {
 //					}
 //				}
 				int con_val = cn.Connect(thisClient.loginPane.Username,thisClient.loginPane.HashPassword);
-				if (con_val == 2)
+				if (con_val == 2){
 					System.out.println("Returned true");
-				//thisClient.cl.show(thisClient.panelCont, "2");
-				thisClient.initRoomPane();
+					//thisClient.cl.show(thisClient.panelCont, "2");
+					try {
+						thisClient.initRoomPane();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				return;
 			}
 		}

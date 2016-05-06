@@ -31,16 +31,15 @@ public class ClientGUI{
 	public ClientGUI() throws UnknownHostException {
 		initComponents();
 	}
-	void initRoomPane(){
+	void initRoomPane() throws InterruptedException{
 		Tab = new javax.swing.JTabbedPane(); //tab, main pane (display room, etc)
 		Main_ScrollPane = new javax.swing.JScrollPane(); //
 		Room_Jlist = new javax.swing.JList<>();
 		
-		HashMap<Integer, String> getSR = clientnet.GetChatRooms();//get open room from the server
-		getServerRoom = new HashMap<Integer, String>();
-		for (HashMap<Integer, String> k : getSR) {
-			
-		}
+		//HashMap<Integer, String> getSR = clientnet.GetChatRooms();//get open room from the server
+		getServerRoom = clientnet.GetChatRooms();
+		System.out.println(getServerRoom);
+		Thread.sleep(1);
 		//getServerRoom.put(0, "Room 1");
 		final String[] openRoom = new String[getServerRoom.size()];
 		int counter = 0;
@@ -69,6 +68,7 @@ public class ClientGUI{
         Tab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TabMouseClicked(evt);
+                
             }
         });
         
@@ -100,9 +100,8 @@ public class ClientGUI{
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">                          
 	private void initComponents() throws UnknownHostException {
-		String ipAddress = JOptionPane.showInputDialog(frame, "Enter Server IP:").toString();
-		int portAddress = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter Server Port:"));
-		clientnet = new ClientNet(InetAddress.getByName(ipAddress),portAddress);
+		String ipAddress = JOptionPane.showInputDialog(frame, "Enter Server IP:","127.0.0.1").toString();
+		clientnet = new ClientNet(InetAddress.getByName(ipAddress));
 		frame = new JFrame("ChatC"); //Main Frame
 		panelCont = new JPanel(); //control Panel
 		loginPane = new LoginPane(clientnet); //Login Panel	
@@ -116,11 +115,11 @@ public class ClientGUI{
 		frame.add(panelCont);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e){
-				clientnet.CloseConnection();
-			}
-		});
+//		frame.addWindowListener(new WindowAdapter() {
+//			public void windowClosing(WindowEvent e){
+//				clientnet.CloseConnection();
+//			}
+//		});
 		frame.setSize(800,600);
 		frame.setVisible(true);
 	}// </editor-fold>                        
@@ -143,8 +142,13 @@ public class ClientGUI{
 			Object item = dlm.getElementAt(index);;
 			Room_Jlist.ensureIndexIsVisible(index);
 			System.out.println(getRoomIDbyName(""+item));
-			Tab.addTab(""+item, new ChatTabPane(clientnet,getRoomIDbyName(""+item)));
+			ChatTabPane chattabpane = new ChatTabPane(clientnet,getRoomIDbyName(""+item));
+			Tab.addTab(""+item, chattabpane);
 			clientnet.JoinChatRoom(getRoomIDbyName(""+item)); //send to server that the user has join the room name
+			
+			Runnable r = new ClientGuiListener(chattabpane,clientnet);
+			Thread th = new Thread(r);
+			th.start();
 			/*
 			 * create thread and listen to port
 			 */
