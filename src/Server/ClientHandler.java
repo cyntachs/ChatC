@@ -165,6 +165,10 @@ public class ClientHandler extends Thread {
 		print("Unauthorized client is trying to perform actions! \n"+err);
 	}
 	
+	protected void Error_ResendData() {
+		
+	}
+	
 	// Message Handler
 	private void MessageHandler() {
 		PacketData data = null;
@@ -182,6 +186,7 @@ public class ClientHandler extends Thread {
 				print("MessageHandler received invalid data");
 				if (data == null) print("Data is null");
 				//if (data[0] == null) print("Data is empty");
+				// TODO request resend
 				return;
 			}
 		}
@@ -189,6 +194,7 @@ public class ClientHandler extends Thread {
 		// check data
 		if (data.GetError() != null){
 			print(data.GetError());
+			// TODO request resend
 			return;
 		}
 		

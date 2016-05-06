@@ -53,6 +53,11 @@ public enum Command {
 			client.Terminate();
 		}
 	},
+	RSND_DATA(12) {
+		public void run(Object[] args) { // handle server request for resend data
+			
+		}
+	},
 	DATA(14) {
 		public void run(Object[] args) { // handle data received from server
 			ServerHandler client = (ServerHandler) args[0];

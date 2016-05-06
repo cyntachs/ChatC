@@ -162,6 +162,11 @@ public enum Command {
 			
 		}
 	},
+	RSND_DATA(12) {
+		public void run(Object[] args) { // handle client request for resend data
+			
+		}
+	},
 	DATA(14) {
 		public void run(Object[] args) { // handle data received from client
 			ClientHandler client = ((ClientHandler) args[0]);
