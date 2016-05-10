@@ -61,9 +61,11 @@ public class Server {
 		ChatRooms_Members.put(NextRoomIndex, new Vector<String>());
 		
 		NextRoomIndex++;
+		print("New room created: "+name+"  owned by: "+own);
 	}
 	
 	public synchronized static void DestroyRoom(int index) {
+		print("Deleting room index: "+index);
 		if (ChatRooms.containsKey(index))
 			ChatRooms.remove(index);
 		else
@@ -72,6 +74,7 @@ public class Server {
 	
 	public synchronized static void AddMember(int index, String au) {
 		ChatRooms_Members.get(index).add(au);
+		print("Added "+au+" to chatroom "+index);
 	}
 	
 	public synchronized static void RemoveMember(int index, String au) {
@@ -81,6 +84,7 @@ public class Server {
 			int i = ChatRooms_Members.get(index).indexOf(au);
 			ChatRooms_Members.get(index).remove(i);
 		}
+		print("Removed "+au+" from chatroom "+index);
 	}
 	
 	// room broadcast
@@ -96,6 +100,7 @@ public class Server {
 				if (c.getToken() == from) continue;
 				String uname = GetUsername(from);
 				c.Send(((char)index)+msg);
+				print("[Broadcast] Sent to client "+c.getID());
 			}
 		}
 	}

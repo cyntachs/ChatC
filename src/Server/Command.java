@@ -224,18 +224,18 @@ public enum Command {
 			
 			// extract command
 			String rmcmd = data.substring(aulen+1);
-			String[] rmcmdp = data.split(":",2);
+			String[] rmcmdp = rmcmd.split(":",2);
 			String cmdpart = rmcmdp[0];
-			char cmdparam = rmcmdp[1].charAt(0);
+			int cmdparam = Integer.parseInt(rmcmdp[1]);
 			
 			// execute command
 			switch(cmdpart){
 			case "JOIN": {
-				Server.AddMember((int)cmdparam, token);
+				Server.AddMember(cmdparam, token);
 				break;
 			}
 			case "LEAVE": {
-				Server.RemoveMember((int)cmdparam, token);
+				Server.RemoveMember(cmdparam, token);
 				break;
 			}
 			case "NEW_ROOM": {
