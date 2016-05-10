@@ -47,6 +47,9 @@ public class ServerHandler extends Thread {
 		this.AuthStatus = 0;
 		this.ClientSocket = cli;
 		
+		this.Data = "";
+		this.NewData = false;
+		
 		Info = new HashMap<String,String>();
 		
 		P = new Packet(ClientSocket);
