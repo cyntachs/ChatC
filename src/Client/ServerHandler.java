@@ -24,6 +24,7 @@ public class ServerHandler extends Thread {
 	
 	// Data
 	protected String Data;
+	protected boolean NewData;
 	protected HashMap<String,String> Info;
 	
 	// Authentication
@@ -84,10 +85,10 @@ public class ServerHandler extends Thread {
 	public void Send(String d, int rindex) {
 		if (AuthStatus != 2) return;
 		String dataf = ((char)AuthToken.length()) + AuthToken + ((char) rindex) + d;
-		print(dataf);
 		synchronized(ClientSocket) {
 			P.writePacket(1, 14, dataf.length(), false, 1, dataf);
 		}
+		print("Packet sent: " + dataf);
 	}
 	
 	// commands
@@ -97,6 +98,13 @@ public class ServerHandler extends Thread {
 		synchronized(ClientSocket) {
 			P.writePacket(0, cmd, dataf.length(), false, 1, dataf);
 		}
+		print("Command sent: " + dataf);
+	}
+	
+	// Acknowledge
+	protected void AckRcv() {
+		String dataf = "ACK_RCV";
+		P.writePacket(0, 6, dataf.length(), false, 1, dataf);
 	}
 	
 	// Message Handler
@@ -125,7 +133,6 @@ public class ServerHandler extends Thread {
 			print(data.GetError());
 			return;
 		}
-		
 		// debug
 		print("\nPacket Dump: ["+data.DataType()+"-"+data.Command()+"-"+data.Size()+"-"+data.isFragmented()+"-"+data.FragmentPart()+"-"+data.Data()+"]\n"+
 				"Message Type:    "+data.DataType()+"\n"+

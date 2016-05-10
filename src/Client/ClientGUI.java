@@ -101,7 +101,7 @@ public class ClientGUI{
 	 * @throws UnknownHostException 
 	 */
 	@SuppressWarnings("unchecked")
-	// <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initComponents() throws UnknownHostException {
 		String ipAddress = JOptionPane.showInputDialog(frame, "Enter Server IP:","127.0.0.1").toString();
 		clientnet = new ClientNet(InetAddress.getByName(ipAddress));
