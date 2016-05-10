@@ -24,6 +24,7 @@ public class ServerHandler extends Thread {
 	
 	// Data
 	protected String Data;
+	protected boolean NewData;
 	protected HashMap<String,String> Info;
 	
 	// Authentication

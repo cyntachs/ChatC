@@ -133,9 +133,10 @@ public class ClientNet {
 	}
 	
 	public String Receive() {
-		if (Ready())
+		if (ServerHandler.NewData) {
+			ServerHandler.NewData = false;
 			return ServerHandler.getData();
-		else
+		} else
 			return null;
 	}
 	
