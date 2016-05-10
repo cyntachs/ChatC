@@ -149,7 +149,10 @@ public class Server {
 		print("Server initialized");
 		
 		// debug init
-		CreateRoom("Debug Room","DEBUGAUTHTOKEN");
+		CreateRoom("Newbs Room","DEBUGAUTHTOKEN");
+		CreateRoom("Awesome Only","DEBUGAUTHTOKEN");
+		CreateRoom("Private","DEBUGAUTHTOKEN");
+		CreateRoom("This is a ChatRoom","DEBUGAUTHTOKEN");
 		
 		// start server routine
 		print("Server routine start");
