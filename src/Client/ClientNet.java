@@ -123,6 +123,7 @@ public class ClientNet {
 	public void Send(String data, int rindex) {
 		// remove trailing spaces and newlines
 		data = data.trim().replaceAll("\r?\n", "");
+		if (data.equals("")) return;
 		ServerHandler.Send(data, rindex);
 	}
 	
@@ -136,6 +137,7 @@ public class ClientNet {
 	public String Receive() {
 		if (ServerHandler.NewData) {
 			ServerHandler.NewData = false;
+			print("Data Buffer read");
 			return ServerHandler.getData();
 		} else
 			return null;

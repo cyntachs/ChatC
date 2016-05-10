@@ -143,6 +143,9 @@ public class ServerHandler extends Thread {
 				"[Data]\n"+data.Data());
 		// TODO do stuff with message
 		Command.get(data.Command()).run(new Object[]{this,data});
+		// new DATA notification
+		if (NewData)
+			print("Ready to read buffer");
 	}
 	
 	public void Terminate(){
