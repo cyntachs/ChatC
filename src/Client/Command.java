@@ -62,8 +62,9 @@ public enum Command {
 		public void run(Object[] args) { // handle data received from server
 			ServerHandler client = (ServerHandler) args[0];
 			client.Data = (String) ((PacketData) args[1]).Data();
+			client.NewData = true;
 			//TODO client.AckRcv();
-			notifyAll();
+			//notifyAll();
 		}
 	},
 	RET_STAT(15) {
@@ -71,7 +72,7 @@ public enum Command {
 			ServerHandler client = (ServerHandler) args[0];
 			String data = ((PacketData) args[1]).Data();
 			client.Info.put("RET_STAT", data);
-			notifyAll();
+			//notifyAll();
 		}
 	},
 	RET_RSP(19) {
