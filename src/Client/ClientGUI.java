@@ -43,10 +43,12 @@ public class ClientGUI{
 		//System.out.println(getServerRoom + "<-----");
 		//Thread.sleep(1);
 		//getServerRoom.put(0, "Room 1");
+		System.out.println(getServerRoom.size());
 		final String[] openRoom = new String[getServerRoom.size()];
 		int counter = 0;
 		for(int key: getServerRoom.keySet()){
-			openRoom[counter] = getServerRoom.get(key); 
+			openRoom[counter] = getServerRoom.get(key);
+			counter++;
 		}
 		Room_Jlist.setModel(new javax.swing.AbstractListModel<String>() {
 			String[] strings = openRoom;

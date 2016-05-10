@@ -171,7 +171,7 @@ public class LoginPane extends javax.swing.JPanel {
 //    }
 
     // Variables declaration - do not modify
-    protected String Username;
+    protected static String Username;
     protected String HashPassword;
     private ClientNet clientnet;
     private javax.swing.JButton Login_Button;
