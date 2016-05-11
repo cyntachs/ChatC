@@ -1,7 +1,6 @@
 package Global;
 
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.io.*;
 
 public class Packet {
@@ -10,6 +9,7 @@ public class Packet {
 	private DataOutputStream Out;
 	
 	public class PacketData {
+		private int id;
 		private int type;
 		private int command;
 		private int size;
@@ -63,14 +63,15 @@ public class Packet {
 		return retval;
 	}
 	
-	public void clearSocket() {
+	public boolean clearSocket() {
 		try {
 			synchronized(Socket) {
 			In.skip(9999);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 	
 	public PacketData writePacket(int type, int cmd, int size, boolean isfrag, int fragp, String D) {
@@ -87,7 +88,7 @@ public class Packet {
 				Out.writeInt(fragp);
 				Out.writeUTF(D);
 			} catch (IOException e) {
-				e.printStackTrace();
+				return new PacketData("[Packet] Write exception!\n"+e.toString());
 			}
 			// flush
 			try {
@@ -120,7 +121,7 @@ public class Packet {
 				Out.writeInt(Data.FragmentPart());
 				Out.writeUTF(Data.Data());
 			} catch (IOException e) {
-				e.printStackTrace();
+				return new PacketData("[Packet] Write exception!\n"+e.toString());
 			}
 			// flush
 			try {
@@ -148,15 +149,15 @@ public class Packet {
 				fragp = In.readInt();
 				raw = "" + In.readUTF();
 			} catch (IOException e) {
-				e.printStackTrace();
+				return new PacketData("[Packet] Read exception!\n"+e.toString());
 			}
 		}
 		// check if header is not malformed
 		if ((type == -1) || (cmd == -1) || (size == -1) || (!isfrag && fragp == -1))
-			return new PacketData("Malformed Packet. Has size of "+raw.length());
+			return new PacketData("Malformed Packet");
 		// check if size parameter is correct
 		if (size != raw.length())
-			return new PacketData("Incorrect Data Size: "+size+" != "+raw.length());
+			return new PacketData("Incorrect Data Size: Expected "+size+", Got "+raw.length());
 		// extract data
 		retval[0] = ""+ type;
 		retval[1] = ""+ cmd;
