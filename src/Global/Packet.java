@@ -1,12 +1,13 @@
 package Global;
 
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.io.*;
 
 public class Packet {
 	private Socket Socket;
-	private BufferedReader In;
-	private BufferedWriter Out;
+	private DataInputStream In;
+	private DataOutputStream Out;
 	
 	public class PacketData {
 		private int type;
@@ -41,8 +42,8 @@ public class Packet {
 		this.Socket = Sock;
 		try {
 			synchronized(Socket) {
-				this.Out = new BufferedWriter(new OutputStreamWriter(Socket.getOutputStream()));
-				this.In = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
+				this.Out = new DataOutputStream(new BufferedOutputStream(Socket.getOutputStream()));
+				this.In = new DataInputStream(new BufferedInputStream(Socket.getInputStream()));
 				Out.flush();
 			}
 		} catch (IOException e) {
@@ -54,7 +55,7 @@ public class Packet {
 		boolean retval = false;
 		try {
 			synchronized(Socket) {
-			retval = In.ready();
+			retval = (In.available()>0)? true:false;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -62,7 +63,7 @@ public class Packet {
 		return retval;
 	}
 	
-	public void flushSocket() {
+	public void clearSocket() {
 		try {
 			synchronized(Socket) {
 			In.skip(9999);
@@ -73,31 +74,27 @@ public class Packet {
 	}
 	
 	public PacketData writePacket(int type, int cmd, int size, boolean isfrag, int fragp, String D) {
-		try {
+		synchronized(Socket){
 			// check parameters
 			// limit size to 65025
 			
-			// create packet and send
-			String out = "" + 
-					(char) type +
-					(char) cmd +
-					(char) size +
-					(char) ((isfrag)? 1:0) +
-					(char) fragp + 
-					D;
-			
-			synchronized(Socket){
-			Out.write(out);
-			Out.newLine();
+			// write out
+			try {
+				Out.writeInt(type);
+				Out.writeInt(cmd);
+				Out.writeInt(size);
+				Out.writeBoolean(isfrag);
+				Out.writeInt(fragp);
+				Out.writeUTF(D);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			Out.flush();
-		} catch (IOException e) {
-			System.out.println("[Packet] Could not flush buffer!");
-			e.printStackTrace();
+			// flush
+			try {
+				Out.flush();
+			} catch (IOException e) {
+				return new PacketData("[Packet] Could not flush buffer!\n"+e.toString());
+			}
 		}
 		String[] retval = new String[6];
 		retval[0] = ""+ type;
@@ -110,31 +107,27 @@ public class Packet {
 	}
 	
 	public PacketData writePacket(PacketData Data) {
-		try {
+		synchronized(Socket){
 			// check parameters
 			// limit size to 65025
 			
-			// create packet and send
-			String out = "" 
-					+ (char) Data.DataType()
-					+ (char) Data.Command()
-					+ (char) Data.Size()
-					+ (char) ((Data.isFragmented())? 1:0)
-					+ (char) Data.FragmentPart()
-					+ Data.Data();
-			
-			synchronized(Socket){
-			Out.write(out);
-			Out.newLine();
+			// write out
+			try {
+				Out.writeInt(Data.DataType());
+				Out.writeInt(Data.Command());
+				Out.writeInt(Data.Size());
+				Out.writeBoolean(Data.isFragmented());
+				Out.writeInt(Data.FragmentPart());
+				Out.writeUTF(Data.Data());
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			Out.flush();
-		} catch (IOException e) {
-			System.out.println("[Packet] Could not flush buffer!");
-			e.printStackTrace();
+			// flush
+			try {
+				Out.flush();
+			} catch (IOException e) {
+				return new PacketData("[Packet] Could not flush buffer!\n"+e.toString());
+			}
 		}
 		return Data;
 	}
@@ -143,24 +136,34 @@ public class Packet {
 		if (!readAvailable()) return null;
 		String[] retval = new String[6];
 		String raw = null;
-		try {
-			// read socket
-			synchronized(Socket) {
-			raw = In.readLine();
+		byte[] header = new byte[5];
+		String headerstr = null;
+		int type = -1; int cmd = -1; int size = -1; boolean isfrag = false; int fragp = -1;
+		synchronized(Socket) {
+			try {
+				type = In.readInt();
+				cmd = In.readInt();
+				size = In.readInt();
+				isfrag = In.readBoolean();
+				fragp = In.readInt();
+				raw = "" + In.readUTF();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {e.printStackTrace();}
+		}
 		// check if header is not malformed
-		if (raw.length() < 5) return new PacketData("Malformed Packet");
+		if ((type == -1) || (cmd == -1) || (size == -1) || (!isfrag && fragp == -1))
+			return new PacketData("Malformed Packet. Has size of "+raw.length());
 		// check if size parameter is correct
-		if (((int)raw.charAt(2)) != raw.substring(5).length())
-			return new PacketData("Incorrect Data Size");
+		if (size != raw.length())
+			return new PacketData("Incorrect Data Size: "+size+" != "+raw.length());
 		// extract data
-		retval[0] = ""+ (int)raw.charAt(0);
-		retval[1] = ""+ (int)raw.charAt(1);
-		retval[2] = ""+ (int)raw.charAt(2);
-		retval[3] = ""+ (int)raw.charAt(3);
-		retval[4] = ""+ (int)raw.charAt(4);
-		retval[5] = ""+ raw.substring(5);
+		retval[0] = ""+ type;
+		retval[1] = ""+ cmd;
+		retval[2] = ""+ size;
+		retval[3] = ""+ isfrag;
+		retval[4] = ""+ fragp;
+		retval[5] = ""+ raw;
 		return new PacketData(retval);
 	}
 }
